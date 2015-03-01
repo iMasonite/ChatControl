@@ -6,9 +6,9 @@ ChatControl is an open source chat management and formatting solution for bukkit
 Features
 --------
 
-* Recude amount of spam, ads and swearing.
-* Create your own rules and filters.
-* Many other fully configurable advanced features.
+* Greatly reduce amount of spam, ads and swearing.
+* Create your own rules, handlers and gain full control over your server.
+* Many other fully configurable features, from beginners to proffesionals.
 
 Check out http://www.spigotmc.org/resources/chatcontrol.271/ for more information.
 
@@ -17,7 +17,7 @@ Links
 
 * [Homepage](http://www.spigotmc.org/resources/chatcontrol.271)
 * [ChatControl's Wiki](https://github.com/kangarko/ChatControl/wiki/Frequently-asked-questions-or-issues)
-* Releases: in folder precompiled or on the homepage
+* [Releases](http://www.spigotmc.org/resources/chatcontrol.271/history)
 
 Dave Thomas, founder of OTI, godfather of the Eclipse strategy:
 
