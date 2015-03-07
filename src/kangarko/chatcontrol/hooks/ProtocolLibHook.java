@@ -83,7 +83,7 @@ public class ProtocolLibHook {
 
 					try {
 						ChatControl.instance().chatCeaser.parsePacketRules(e.getPlayer(), json);
-					} catch (PacketCancelledException e1) {
+					} catch (PacketCancelledException ex) {
 						e.setCancelled(true);
 						return;
 					}

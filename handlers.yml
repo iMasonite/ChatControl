@@ -58,7 +58,7 @@
   
   # A list of commands to be executed. Notice they are not handled by this plugin.
   #Execute_Commands:
-  #  - ico take %player 10
+  #  - eco take %player 10
   #  - kick %player &cDo not advertise!
   #  - tempban %player 1d Advertising is prohibited! \n\nContact OP if you think this is in error. \n\nMessage caught: %message
   
