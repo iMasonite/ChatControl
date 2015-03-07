@@ -22,6 +22,10 @@
 # then log (Caught message will be printed in console and saved in rules_log.txt)
 # handle as <handler_name> (Launch actions specified in handlers.yml)
 #
+# Valid variables:
+# %player (The name of the player. Without prefix and suffix.)
+# %world (The name of the player's world.)
+#
 # Supports color codes with '&' character.
 # Accepts unicode characters when saved in UTF-8 encoding (tested on Notepad++).
 # -------------------------------------------------------------------------------
@@ -33,6 +37,7 @@ strip [\(\[\]\)]
 handle as advertisement
 
 match [a-zA-Z0-9\-\.]+\s?(\.|dot|\(dot\)|-|;|:|,)\s?(com|org|net|cz|co|uk|sk|biz|mobi|xxx|eu)\b
+ignore string youtube.com|imgur.com
 id 2
 strip [\(\[\]\)]
 handle as advertisement

@@ -11,10 +11,12 @@
 # then replace <message> (A word used to replace only the part of the matched message.)
 # then rewrite <message> (A message used to replace the whole checked message.)
 # then rewritein <world> <message> (A message used to replace the whole checked message in the specified world only. 
-#                                   You can use this together with rewrite as a fallback on other worlds. It is possible 
+#                                   You can use this together with 'rewrite' as a fallback on other worlds. It is possible 
 #                                   to add multiple operators in one rule for multiple worlds.)
 # dont verbose (Even if you have Verbose enabled the rule will be hidden from appearing in the console.)
 # then deny (Message will not be shown in the chat - cancels the packet.)
+#
+# For valid variables (e.g. %world) check out the header in the rules.txt file!
 #
 # Supports color codes with & and unicode characters when saved in UTF-8 encoding.
 # -------------------------------------------------------------------------------
@@ -27,4 +29,4 @@
 match ^I'm sorry, but you do not have permission to perform this.*|^You do not have access to that command.
 dont verbose
 then rewrite &cInsufficient permission.
-#then rewritein hardcore &cThis command is not available in Hardcore world.
+#then rewritein hardcore &cThis command is not available in %world world.
