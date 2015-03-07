@@ -24,13 +24,13 @@ public class Common {
 
 	private static final ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();	
 	private static String INTERNAL_PREFIX = "";
-	
+
 	public static void addLoggingPrefix() {
 		INTERNAL_PREFIX = "[ChatControl] ";
 	}
-	
+
 	private static final DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-	
+
 	/**
 	 * DAY.MONTH.YEAR HOUR:MINUTES:SECONDS
 	 */
@@ -138,7 +138,7 @@ public class Common {
 		}
 		return tempMessage.trim();
 	}
-	
+
 	public static String colorize(String str) {
 		return ChatColor.translateAlternateColorCodes('&', setPrefix(str));
 	}
@@ -146,7 +146,7 @@ public class Common {
 	public static String consoleLine() {
 		return "&6*----------------------------------------------*";
 	}	
-	
+
 	// ---------------------------- PRIVATE --------------------------------------
 
 	private static String setPrefix(String str) {
@@ -156,14 +156,14 @@ public class Common {
 	private static boolean isDomain(String str) {
 		return str.matches("(https?:\\/\\/)?([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\.-]*)*\\/?$");
 	}
-	
+
 	private static String resolvedSender(CommandSender sender) {
 		if (sender instanceof Player)
 			return sender.getName();
 
 		return Localization.Parts.CONSOLE;
 	}
-	
+
 	// Example implementation of the Levenshtein Edit Distance
 	// See http://rosettacode.org/wiki/Levenshtein_distance#Java
 	private static int editDistance(String s1, String s2) {
@@ -194,7 +194,7 @@ public class Common {
 	public static void Log(String str) {
 		console.sendMessage(colorize(INTERNAL_PREFIX + str.replace("\n", "\n&r")));
 	}
-	
+
 	public static void LogInFrame(boolean disable, String... messages) {
 		Log(consoleLine());
 		for (String msg : messages)
@@ -216,7 +216,7 @@ public class Common {
 		if (Settings.DEBUG)
 			console.sendMessage(colorize("[ChatControl Debug] " + str));
 	}
-	
+
 	public static void Verbose(String str) {
 		if (Settings.VERBOSE_RULES || Settings.DEBUG)
 			console.sendMessage(colorize(str.replace("\n", "\n&r")));
@@ -229,7 +229,7 @@ public class Common {
 	public static void Error(String str) {
 		Bukkit.getLogger().log(Level.SEVERE, "[ChatControl " + ChatControl.instance().getDescription().getVersion() + "] " + str);
 	}
-	
+
 	// -------------------------------------------------------------------
 
 	public static String prepareForSimilarityCheck(String str) {
@@ -253,7 +253,7 @@ public class Common {
 	public static String stripColors(String str) {	
 		return str.replaceAll("(" + ChatColor.COLOR_CHAR + "|&)([0-9a-fk-or])", "");
 	}
-	
+
 	public static int[] checkCaps(String message) {
 		int[] editedMsg = new int[message.length()];
 		String[] parts = message.split(" ");
@@ -299,7 +299,7 @@ public class Common {
 	public static boolean regExMatch(String regex, String plain_msg) {
 		regex = stripColors(regex);
 		plain_msg = stripColors(plain_msg);
-		
+
 		Pattern pattern = null;
 		TimedCharSequence timedMsg = new TimedCharSequence(plain_msg.toLowerCase(), Settings.REGEX_TIMEOUT);
 
@@ -350,11 +350,15 @@ public class Common {
 	public static String shortLocation(Location loc) {
 		return loc.getWorld().getName() + " x:" + (int) loc.getX() + " y:" + (int) loc.getY() + " z:" + (int) loc.getZ();
 	}
-	
+
 	public static String getServerVersion() {
 		String packageName = Bukkit.getServer().getClass().getPackage().getName();
 		String apiVersion = packageName.substring(packageName.lastIndexOf('.') + 1);
 
 		return apiVersion;
+	}
+
+	public static String lastColor(String msg) {
+		return msg.substring(msg.lastIndexOf('&'), msg.length());
 	}
 }

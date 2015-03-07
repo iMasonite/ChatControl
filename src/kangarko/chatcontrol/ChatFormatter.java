@@ -76,11 +76,33 @@ public class ChatFormatter implements Listener {
 			e.getRecipients().clear();
 			e.getRecipients().addAll(getLocalRecipients(pl, msgFormat, Settings.Chat.Formatter.RANGE));
 		}
+
+		// experiment start
+		/*System.out.println("PREFIX: " + ChatControl.instance().vault.getPlayerPrefix(pl));
+		
+		String vault_prefix = ChatControl.instance().vault.getPlayerPrefix(pl);
+		String vault_suffix = ChatControl.instance().vault.getPlayerSuffix(pl);
+		
+		for (Player online : e.getRecipients()) {
+			new Experimental.JsonBuilder(/*msgFormat.replace("%1$s", "").replace("%2$s", msg))
+			.add(vault_prefix)
+			.setHoverAction(HoverAction.SHOW_TEXT, " &7An Operator is the highest rank, \n &7which manages things around \n &7the server and its players. ")
+			
+			.add(Common.lastColor(vault_prefix) + pl.getName())
+			.setHoverAction(HoverAction.SHOW_TEXT, "&7Message Issued: &b" + Common.getFormattedDate() + "\n&7Click to send a PM.")
+			.setClickAction(ClickAction.SUGGEST_COMMAND, "/tell " + pl.getName() + " ")
+			
+			.add("&7: " + vault_suffix + msg)
+			.send(online);
+		}
+
+		e.getRecipients().clear();*/
+		// experiment end
 	}
 
 	public String replacePlayerVariables(Player pl, String format) {
 		String world = pl.getWorld().getName();
-		
+
 		if (ChatControl.instance().authMe != null)
 			format = format.replace("%countrycode", ChatControl.instance().authMe.getCountryCode(pl)).replace("%countryname", ChatControl.instance().authMe.getCountryName(pl));
 
@@ -225,3 +247,105 @@ public class ChatFormatter implements Listener {
 		return townyHook.getTownName(pl);
 	}
 }
+
+/*class Experimental {
+
+	enum ClickAction {
+		RUN_COMMAND,
+		SUGGEST_COMMAND;
+	}
+
+	enum HoverAction {
+		SHOW_TEXT,
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static class JsonBuilder {
+
+		private JSONObject json = new JSONObject();
+
+		public JsonBuilder() {
+			this("");
+		}
+		
+		public JsonBuilder(String message) {
+			JSONArray array = new JSONArray();
+			JSONObject extra = new JSONObject();
+
+			extra.put("text", message);
+			array.add(extra);
+
+			json.put("extra", array);
+			json.put("text", "");
+		}
+
+		public JsonBuilder add(String message) {
+			JSONObject extra = new JSONObject();
+			
+			extra.put("text", message);
+
+			putNewMapping(extra);
+			
+			return this;
+		}
+
+		public JsonBuilder setClickAction(ClickAction action, String value) {
+			JSONObject event = new JSONObject();
+
+			event.put("action", action.toString().toLowerCase());
+			event.put("value", value);
+
+			insertToLastMapping("clickEvent", event);
+			
+			return this;
+		}
+		
+		public JsonBuilder setHoverAction(HoverAction action, String value) {
+			JSONObject event = new JSONObject();
+
+			event.put("action", action.toString().toLowerCase());
+			event.put("value", value);
+
+			insertToLastMapping("hoverEvent", event);
+			
+			return this;
+		}
+
+		// ------------- Helpers
+		
+		private void insertToLastMapping(String key, Object obj) {
+			JSONArray array = (JSONArray) json.get("extra");
+			JSONObject last = (JSONObject) array.get(array.size() - 1);
+
+			last.put(key, obj);
+			json.put("extra", array);
+		}
+
+		private void putNewMapping(Object obj) {
+			JSONArray array = (JSONArray) json.get("extra");
+
+			array.add(obj);
+			json.put("extra", array);
+		}
+
+		// ------------- Final methods
+
+		public String toJSONString() {
+			return json.toJSONString();
+		}
+
+		public void send(Player badass) {		
+			try {
+				System.out.println("Sending: " + json.toJSONString());
+
+				IChatBaseComponent comp = ChatSerializer.a( Spravy.colorize(json.toJSONString()) );
+				PacketPlayOutChat packet = new PacketPlayOutChat(comp);    	
+
+				((CraftPlayer) badass).getHandle().playerConnection.sendPacket(packet);
+			} catch (Exception ex) {
+				Common.tell(badass, "&cSeems like an error occured, hahaha");
+				ex.printStackTrace();
+			}
+		}
+	}
+}*/
