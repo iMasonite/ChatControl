@@ -1,6 +1,6 @@
 name: ChatControl
 main: kangarko.chatcontrol.ChatControl
-version: 5.0.6
+version: 5.0.7
 author: kangarko
 soft-depend: [Essentials, Vault, Multiverse-Core, ProtocolLib, Towny, AuthMe, RushCore]
 commands: 
