@@ -338,7 +338,7 @@ public class ChatFormatter implements Listener {
 			try {
 				System.out.println("Sending: " + json.toJSONString());
 
-				IChatBaseComponent comp = ChatSerializer.a( Spravy.colorize(json.toJSONString()) );
+				IChatBaseComponent comp = ChatSerializer.a( Common.colorize(json.toJSONString()) );
 				PacketPlayOutChat packet = new PacketPlayOutChat(comp);    	
 
 				((CraftPlayer) badass).getHandle().playerConnection.sendPacket(packet);
