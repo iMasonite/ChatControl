@@ -32,24 +32,18 @@ public class ChatFormatter implements Listener {
 	private final Pattern RESET_REGEX = Pattern.compile("(?i)&([R])");
 
 	private MultiverseHook mvHook;
-	private SimpleClansHook scHook;
+	private SimpleClansHook clansHook;
 	private TownyHook townyHook;
 
 	public ChatFormatter() {
-		if (Bukkit.getPluginManager().getPlugin("Multiverse-Core") != null) {
+		if (doesPluginExist("Multiverse-Core", "World Alias"))
 			mvHook = new MultiverseHook();
-			Common.Log("&fHooked with Multiverse 2 (World Alias)!");
-		}
 
-        if (Bukkit.getPluginManager().getPlugin("SimpleClans") != null) {
-            scHook = new SimpleClansHook();
-			Common.Log("&fSimpleClans integration enabled.");
-		}
+        if (doesPluginExist("SimpleClans"))
+            clansHook = new SimpleClansHook();
 
-		if (Bukkit.getPluginManager().getPlugin("Towny") != null) {
+		if (doesPluginExist("Towny", "Tested on v0.8x"))
 			townyHook = new TownyHook();
-			Common.Log("&fTowny 0.8x integration enabled.");
-		}
 	}
 
 	@EventHandler(ignoreCancelled = true)
@@ -57,30 +51,30 @@ public class ChatFormatter implements Listener {
 		Player pl = e.getPlayer();
 		String msg = e.getMessage();
 
-		String msgFormat = Settings.Chat.Formatter.FORMAT;
-		boolean rangedMode = Settings.Chat.Formatter.RANGED_MODE;
+		String format = Settings.Chat.Formatter.FORMAT;
+		boolean rangedChat = Settings.Chat.Formatter.RANGED_MODE;
 
-		if (rangedMode && msg.startsWith("!") && Common.hasPerm(pl, Permissions.Formatter.GLOBAL_CHAT)) {
-			rangedMode = false;
+		if (rangedChat && msg.startsWith("!") && Common.hasPerm(pl, Permissions.Formatter.GLOBAL_CHAT)) {
+			rangedChat = false;
 			msg = msg.substring(1);
 
-			msgFormat = Settings.Chat.Formatter.GLOBAL_FORMAT;
+			format = Settings.Chat.Formatter.GLOBAL_FORMAT;
 		}
 
-		msgFormat = formatColor(msgFormat);
+		format = formatColor(format);
 
-		msg = formatColor(msg, pl, pl.getWorld().getName());
+		msg = formatColor(msg, pl);
 
-		msgFormat = msgFormat.replace("%message", "%2$s").replace("%displayname", "%1$s");
-		msgFormat = replacePlayerVariables(pl, msgFormat);
-		msgFormat = replaceTime(msgFormat);
+		format = format.replace("%message", "%2$s").replace("%displayname", "%1$s");
+		format = replacePlayerVariables(pl, format);
+		format = replaceTime(format);
 
-		e.setFormat(msgFormat);
+		e.setFormat(format);
 		e.setMessage(msg);
 
-		if (rangedMode) {
+		if (rangedChat) {
 			e.getRecipients().clear();
-			e.getRecipients().addAll(getLocalRecipients(pl, msgFormat, Settings.Chat.Formatter.RANGE));
+			e.getRecipients().addAll(getLocalRecipients(pl, format, Settings.Chat.Formatter.RANGE));
 		}
 
 		// experiment start
@@ -115,9 +109,11 @@ public class ChatFormatter implements Listener {
 		return format
 				.replace("%pl_prefix", formatColor(ChatControl.instance().vault.getPlayerPrefix(pl)))
 				.replace("%pl_suffix", formatColor(ChatControl.instance().vault.getPlayerSuffix(pl)))
-				.replace("%world", getWorldAlias(world)).replace("%health", formatHealth(pl) + ChatColor.RESET)
+				.replace("%world", getWorldAlias(world))
+				.replace("%health", formatHealth(pl) + ChatColor.RESET)
 				.replace("%player", pl.getName())
-				.replace("%town", getTown(pl)).replace("%nation", getNation(pl))
+				.replace("%town", getTown(pl))
+				.replace("%nation", getNation(pl))
 				.replace("%clan", getClanTag(pl));
 	}
 
@@ -155,28 +151,28 @@ public class ChatFormatter implements Listener {
 		Calendar c = Calendar.getInstance();
 
 		if (msg.contains("%h"))
-			msg = msg.replace("%h", String.format("%02d", c.get(10)));
+			msg = msg.replace("%h", String.format("%02d", c.get(Calendar.HOUR)));
 
 		if (msg.contains("%H"))
-			msg = msg.replace("%H", String.format("%02d", c.get(11)));
+			msg = msg.replace("%H", String.format("%02d", c.get(Calendar.HOUR_OF_DAY)));
 
 		if (msg.contains("%g"))
-			msg = msg.replace("%g", Integer.toString(c.get(10)));
+			msg = msg.replace("%g", Integer.toString(c.get(Calendar.HOUR)));
 
 		if (msg.contains("%G"))
-			msg = msg.replace("%G", Integer.toString(c.get(11)));
+			msg = msg.replace("%G", Integer.toString(c.get(Calendar.HOUR_OF_DAY)));
 
 		if (msg.contains("%i"))
-			msg = msg.replace("%i", String.format("%02d", c.get(12)));
+			msg = msg.replace("%i", String.format("%02d", c.get(Calendar.MINUTE)));
 
 		if (msg.contains("%s"))
-			msg = msg.replace("%s", String.format("%02d", c.get(13)));
+			msg = msg.replace("%s", String.format("%02d", c.get(Calendar.SECOND)));
 
 		if (msg.contains("%a"))
-			msg = msg.replace("%a", c.get(9) == 0 ? "am" : "pm");
+			msg = msg.replace("%a", c.get(Calendar.AM_PM) == 0 ? "am" : "pm");
 
 		if (msg.contains("%A"))
-			msg = msg.replace("%A", c.get(9) == 0 ? "AM" : "PM");
+			msg = msg.replace("%A", c.get(Calendar.AM_PM) == 0 ? "AM" : "PM");
 
 		return msg;
 	}
@@ -185,18 +181,10 @@ public class ChatFormatter implements Listener {
 		if (string == null)
 			return "";
 
-		String str = string;
-		str = COLOR_REGEX.matcher(str).replaceAll("\u00A7$1");
-		str = MAGIC_REGEN.matcher(str).replaceAll("\u00A7$1");
-		str = BOLD_REGEX.matcher(str).replaceAll("\u00A7$1");
-		str = STRIKETHROUGH_REGEX.matcher(str).replaceAll("\u00A7$1");
-		str = UNDERLINE_REGEX.matcher(str).replaceAll("\u00A7$1");
-		str = ITALIC_REGEX.matcher(str).replaceAll("\u00A7$1");
-		str = RESET_REGEX.matcher(str).replaceAll("\u00A7$1");
-		return str;
+		return Common.colorize(string);
 	}
 
-	private String formatColor(String string, Player pl, String worldName) {
+	private String formatColor(String string, Player pl) {
 		if (string == null)
 			return "";
 
@@ -232,6 +220,18 @@ public class ChatFormatter implements Listener {
 			return ChatColor.GOLD + "" + health;
 		return ChatColor.RED + "" + health;
 	}
+	
+	private boolean doesPluginExist(String plugin) {
+		return doesPluginExist(plugin, null);
+	}
+	
+	private boolean doesPluginExist(String plugin, String message) {
+		if (Bukkit.getPluginManager().getPlugin(plugin) != null) {
+			Common.Log("&f" + plugin + " integration enabled!" + (message == null ? "" : " (" + message + ")"));
+			return true;
+		}
+		return false;
+	}
 
 	private String getWorldAlias(String world) {
 		if (mvHook == null)
@@ -255,10 +255,10 @@ public class ChatFormatter implements Listener {
 	}
 
 	private String getClanTag(Player pl) {
-		if (scHook == null)
+		if (clansHook == null)
 			return "";
 
-		return scHook.getClanTag(pl);
+		return clansHook.getClanTag(pl);
 	}
 }
 

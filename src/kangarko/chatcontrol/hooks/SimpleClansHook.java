@@ -5,20 +5,20 @@ import net.sacredlabyrinth.phaed.simpleclans.SimpleClans;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-public class SimpleClansHook
-{
-    private final SimpleClans sc;
+public class SimpleClansHook {
 
-    public SimpleClansHook(){
-        sc = (SimpleClans) Bukkit.getPluginManager().getPlugin("SimpleClans");
-    }
+	private final SimpleClans clans;
 
-    public String getClanTag(Player p){
-        ClanPlayer clanPlayer = sc.getClanManager().getClanPlayer(p);
-        if(clanPlayer !=null){
-            return clanPlayer.getClan().getColorTag();
-        }
+	public SimpleClansHook() {
+		clans = (SimpleClans) Bukkit.getPluginManager().getPlugin("SimpleClans");
+	}
 
-        return null;
-    }
+	public String getClanTag(Player pl) {
+		ClanPlayer clanPl = clans.getClanManager().getClanPlayer(pl);
+		
+		if (clanPl != null)
+			return clanPl.getClan().getColorTag();
+
+		return null;
+	}
 }
