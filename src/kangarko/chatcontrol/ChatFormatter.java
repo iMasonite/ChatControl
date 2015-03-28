@@ -1,16 +1,11 @@
 package kangarko.chatcontrol;
 
-import java.util.Calendar;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.regex.Pattern;
-
 import kangarko.chatcontrol.hooks.MultiverseHook;
+import kangarko.chatcontrol.hooks.SimpleClansHook;
 import kangarko.chatcontrol.hooks.TownyHook;
 import kangarko.chatcontrol.model.Settings;
 import kangarko.chatcontrol.utils.Common;
 import kangarko.chatcontrol.utils.Permissions;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -20,6 +15,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+
+import java.util.Calendar;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.regex.Pattern;
 
 public class ChatFormatter implements Listener {
 
@@ -32,12 +32,18 @@ public class ChatFormatter implements Listener {
 	private final Pattern RESET_REGEX = Pattern.compile("(?i)&([R])");
 
 	private MultiverseHook mvHook;
+	private SimpleClansHook scHook;
 	private TownyHook townyHook;
 
 	public ChatFormatter() {
 		if (Bukkit.getPluginManager().getPlugin("Multiverse-Core") != null) {
 			mvHook = new MultiverseHook();
 			Common.Log("&fHooked with Multiverse 2 (World Alias)!");
+		}
+
+        if (Bukkit.getPluginManager().getPlugin("SimpleClans") != null) {
+            scHook = new SimpleClansHook();
+			Common.Log("&fSimpleClans integration enabled.");
 		}
 
 		if (Bukkit.getPluginManager().getPlugin("Towny") != null) {
@@ -79,19 +85,19 @@ public class ChatFormatter implements Listener {
 
 		// experiment start
 		/*System.out.println("PREFIX: " + ChatControl.instance().vault.getPlayerPrefix(pl));
-		
+
 		String vault_prefix = ChatControl.instance().vault.getPlayerPrefix(pl);
 		String vault_suffix = ChatControl.instance().vault.getPlayerSuffix(pl);
-		
+
 		for (Player online : e.getRecipients()) {
 			new Experimental.JsonBuilder(/*msgFormat.replace("%1$s", "").replace("%2$s", msg))
 			.add(vault_prefix)
 			.setHoverAction(HoverAction.SHOW_TEXT, " &7An Operator is the highest rank, \n &7which manages things around \n &7the server and its players. ")
-			
+
 			.add(Common.lastColor(vault_prefix) + pl.getName())
 			.setHoverAction(HoverAction.SHOW_TEXT, "&7Message Issued: &b" + Common.getFormattedDate() + "\n&7Click to send a PM.")
 			.setClickAction(ClickAction.SUGGEST_COMMAND, "/tell " + pl.getName() + " ")
-			
+
 			.add("&7: " + vault_suffix + msg)
 			.send(online);
 		}
@@ -111,7 +117,8 @@ public class ChatFormatter implements Listener {
 				.replace("%pl_suffix", formatColor(ChatControl.instance().vault.getPlayerSuffix(pl)))
 				.replace("%world", getWorldAlias(world)).replace("%health", formatHealth(pl) + ChatColor.RESET)
 				.replace("%player", pl.getName())
-				.replace("%town", getTown(pl)).replace("%nation", getNation(pl));
+				.replace("%town", getTown(pl)).replace("%nation", getNation(pl))
+				.replace("%clan", getClanTag(pl));
 	}
 
 	private List<Player> getLocalRecipients(Player pl, String message, double range) {
@@ -246,6 +253,13 @@ public class ChatFormatter implements Listener {
 
 		return townyHook.getTownName(pl);
 	}
+
+	private String getClanTag(Player pl) {
+		if (scHook == null)
+			return "";
+
+		return scHook.getClanTag(pl);
+	}
 }
 
 /*class Experimental {
@@ -258,7 +272,7 @@ public class ChatFormatter implements Listener {
 	enum HoverAction {
 		SHOW_TEXT,
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public static class JsonBuilder {
 
@@ -267,7 +281,7 @@ public class ChatFormatter implements Listener {
 		public JsonBuilder() {
 			this("");
 		}
-		
+
 		public JsonBuilder(String message) {
 			JSONArray array = new JSONArray();
 			JSONObject extra = new JSONObject();
@@ -281,11 +295,11 @@ public class ChatFormatter implements Listener {
 
 		public JsonBuilder add(String message) {
 			JSONObject extra = new JSONObject();
-			
+
 			extra.put("text", message);
 
 			putNewMapping(extra);
-			
+
 			return this;
 		}
 
@@ -296,10 +310,10 @@ public class ChatFormatter implements Listener {
 			event.put("value", value);
 
 			insertToLastMapping("clickEvent", event);
-			
+
 			return this;
 		}
-		
+
 		public JsonBuilder setHoverAction(HoverAction action, String value) {
 			JSONObject event = new JSONObject();
 
@@ -307,12 +321,12 @@ public class ChatFormatter implements Listener {
 			event.put("value", value);
 
 			insertToLastMapping("hoverEvent", event);
-			
+
 			return this;
 		}
 
 		// ------------- Helpers
-		
+
 		private void insertToLastMapping(String key, Object obj) {
 			JSONArray array = (JSONArray) json.get("extra");
 			JSONObject last = (JSONObject) array.get(array.size() - 1);
@@ -334,12 +348,12 @@ public class ChatFormatter implements Listener {
 			return json.toJSONString();
 		}
 
-		public void send(Player badass) {		
+		public void send(Player badass) {
 			try {
 				System.out.println("Sending: " + json.toJSONString());
 
 				IChatBaseComponent comp = ChatSerializer.a( Common.colorize(json.toJSONString()) );
-				PacketPlayOutChat packet = new PacketPlayOutChat(comp);    	
+				PacketPlayOutChat packet = new PacketPlayOutChat(comp);
 
 				((CraftPlayer) badass).getHandle().playerConnection.sendPacket(packet);
 			} catch (Exception ex) {
