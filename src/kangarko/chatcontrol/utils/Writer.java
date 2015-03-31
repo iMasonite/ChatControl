@@ -16,6 +16,7 @@ public class Writer {
 
 	public static final String ERROR_FILE_PATH = "errors/errors.txt";
 	public static final String CHAT_FILE_PATH = "logs/chat.txt";
+	public static final String RULES_FILE_PATH = "logs/rules.txt";
 
 	/**
 	 * Write a line to file with optional prefix which can be null.

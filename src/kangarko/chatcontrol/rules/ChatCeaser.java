@@ -260,7 +260,7 @@ public final class ChatCeaser {
 
 				if (rule.log()) {
 					Common.Log(org.bukkit.ChatColor.RED + (flag == Rule.SIGN ? "[SIGN at " + Common.shortLocation(pl.getLocation()) + "] " : "") + pl.getName() + " violated " + rule.toShortString() + " with message: &f" + msg);
-					Writer.Write("logs/rules_log.txt", pl.getName(), (flag == Rule.SIGN ? "[SIGN at " + Common.shortLocation(pl.getLocation()) + "] " : "") + rule.toShortString() + " caught message: " + msg);
+					Writer.Write(Writer.RULES_FILE_PATH, pl.getName(), (flag == Rule.SIGN ? "[SIGN at " + Common.shortLocation(pl.getLocation()) + "] " : "") + rule.toShortString() + " caught message: " + msg);
 				}
 
 				if (rule.getCustomNotifyMessage() != null) {

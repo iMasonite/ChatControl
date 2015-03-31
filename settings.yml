@@ -13,7 +13,7 @@
 # Most of the messages (warning messages, etc) are found
 # in localization. To customize it, make a new file in
 # localization/messages_LOCALENAME.yml and it will be filled
-# with all the default values.
+# with all the default values and kept with sync.
 # ---------------------------------------------------------
 
 Anti_Bot:
@@ -24,7 +24,7 @@ Anti_Caps:
   Enabled: true
   Warn_Player: true
   
-  # Ignore player names. Exclude them from caps percentage and caps in a row.
+  # Ignore player names. Exclude them from caps percentage and caps in a row check.
   # Enabling is not recommended on a bigger servers (50+ slots) due to iterating over every player (laggy).
   Ignore_Usernames: false
   Min_Message_Length: 5
@@ -85,11 +85,13 @@ Chat:
   Formatter:
     Enabled: false
 
-    # Normal chat message format.
-    # The prefix has to include pl_ because without it it fetch the plugin's prefix name.
+    # Default chat message format.
+    # The prefix has to include the 'pl_' because without it the plugin's prefix name will be given instead.
     Message_Format: '%pl_prefix%player:%pl_suffix %message'
 
-    # Do not touch this unless you have enabled the Ranged_Mode
+    # If Ranged_Mode is enabled, this format is used when a message
+    # is printed into the global chat, either prefixing it with '!' or
+    # having appropiate permission.
     Global_Message_Format: '%pl_prefix%player:%pl_suffix %message'
 
     # If enabled and a players write a message, it will only be sent to players
