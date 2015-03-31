@@ -85,13 +85,13 @@ public class Common {
 			broadcastWithPlayer(msg + (reason.equals("") ? "" : " " + Localization.Parts.REASON.replace("%reason", reason)), plReplace == null ? "" : resolvedSender(plReplace));
 	}
 
-	public static boolean hasPerm(CommandSender sender, String str) {
-		if (sender.hasPermission(str) && sender.isOp() && !Settings.OP_HAS_PERMISSIONS)
+	public static boolean hasPerm(CommandSender sender, String perm) {
+		if (sender.hasPermission(perm) && sender.isOp() && !Settings.OP_HAS_PERMISSIONS)
 			return false;
 		if (sender.isOp() && Settings.OP_HAS_PERMISSIONS)
 			return true;
 
-		return sender.hasPermission(str);
+		return sender.hasPermission(perm);
 	}
 
 	public static void customAction(final Player pl, final String action, final String msg) {

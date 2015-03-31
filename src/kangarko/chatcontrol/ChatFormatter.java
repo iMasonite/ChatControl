@@ -63,20 +63,17 @@ public class ChatFormatter implements Listener {
 			format = Settings.Chat.Formatter.GLOBAL_FORMAT;
 		}
 
-		format = formatColor(format);
-
 		msg = formatColor(msg, pl);
 
 		format = format.replace("%message", "%2$s").replace("%displayname", "%1$s");
-		format = replacePlayerVariables(pl, format);
-		format = replaceTime(format);
+		format = replaceAllVariables(pl, format);
 
 		e.setFormat(format);
 		e.setMessage(msg);
 
 		if (rangedChat) {
 			e.getRecipients().clear();
-			e.getRecipients().addAll(getLocalRecipients(pl, format, Settings.Chat.Formatter.RANGE));
+			e.getRecipients().addAll(getLocalRecipients(pl, msg, Settings.Chat.Formatter.RANGE));
 		}
 
 		// experiment start
@@ -102,6 +99,14 @@ public class ChatFormatter implements Listener {
 		// experiment end
 	}
 
+	private String replaceAllVariables(Player pl, String format) {
+		format = formatColor(format);
+		format = replacePlayerVariables(pl, format);
+		format = replaceTime(format);
+
+		return format;
+	}
+
 	public String replacePlayerVariables(Player pl, String format) {
 		String world = pl.getWorld().getName();
 
@@ -125,36 +130,35 @@ public class ChatFormatter implements Listener {
 			Location playerLocation = sender.getLocation();
 			double squaredDistance = Math.pow(range, 2.0D);
 
-			for (Player prijemca : Bukkit.getOnlinePlayers()) {
-				if (Common.hasPerm(prijemca, Permissions.Formatter.SPY) || Common.hasPerm(sender, Permissions.Formatter.OVERRIDE_RANGED_ALL)) {
-					recipients.add(prijemca);
-					continue;
-				}
-
-				if (prijemca.getWorld().getName().equals(sender.getWorld().getName()))
-					if (Common.hasPerm(sender, Permissions.Formatter.OVERRIDE_RANGED_WORLD) || playerLocation.distanceSquared(prijemca.getLocation()) <= squaredDistance)
-						recipients.add(prijemca);
+			for (Player receiver : Bukkit.getOnlinePlayers()) {
+				if (receiver.getWorld().getName().equals(sender.getWorld().getName()))
+					if (Common.hasPerm(sender, Permissions.Formatter.OVERRIDE_RANGED_WORLD) || playerLocation.distanceSquared(receiver.getLocation()) <= squaredDistance) {
+						recipients.add(receiver);
+						continue;
+					}
+				
+				if (Common.hasPerm(receiver, Permissions.Formatter.SPY))
+					Common.tell(receiver, replaceAllVariables(sender, Settings.Chat.Formatter.SPY_FORMAT.replace("%message", message).replace("%displayname", sender.getDisplayName())));
 			}
 
 			return recipients;
 		} catch (ArrayIndexOutOfBoundsException ex) {
-			Common.Debug("(Range Chat) Got " + ex.getMessage() + ", trying backup.");
+			Common.Log("(Range Chat) Got " + ex.getMessage() + ", trying (limited) backup.");
 			Writer.Write(Writer.ERROR_FILE_PATH, "Range Chat", sender.getName() + ": \'" + message + "\' Resulted in error: " + ex.getMessage());
 
-			if (Common.hasPerm(sender, Permissions.Formatter.OVERRIDE_RANGED_WORLD) || Common.hasPerm(sender, Permissions.Formatter.OVERRIDE_RANGED_ALL)) {
+			if (Common.hasPerm(sender, Permissions.Formatter.OVERRIDE_RANGED_WORLD)) {
 				for (Player recipient : Bukkit.getOnlinePlayers())
-					if (Common.hasPerm(sender, Permissions.Formatter.OVERRIDE_RANGED_ALL) || recipient.getWorld().equals(sender.getWorld()))
+					if (recipient.getWorld().equals(sender.getWorld()))
 						recipients.add(recipient);
 
-				return recipients;
+			} else {
+				for (Entity en : sender.getNearbyEntities(range, range, range))
+					if (en.getType() == EntityType.PLAYER)
+						recipients.add((Player) en);
 			}
-
-			for (Entity en : sender.getNearbyEntities(range, range, range))
-				if (en.getType() == EntityType.PLAYER)
-					recipients.add((Player) en);
-
-			return recipients;
 		}
+
+		return recipients;
 	}
 
 	private String replaceTime(String msg) {
@@ -237,7 +241,7 @@ public class ChatFormatter implements Listener {
 
 	private boolean doesPluginExist(String plugin, String message) {
 		if (Bukkit.getPluginManager().getPlugin(plugin) != null) {
-			Common.Log("&f" + plugin + " integration enabled!" + (message == null ? "" : " (" + message + ")"));
+			Common.Log("&fHooked with: " + plugin + (message == null ? "" : " (" + message + ")"));
 			return true;
 		}
 		return false;

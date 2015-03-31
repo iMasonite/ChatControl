@@ -2,12 +2,14 @@ name: ChatControl
 main: kangarko.chatcontrol.ChatControl
 version: 5.0.7
 author: kangarko
-soft-depend: [Essentials, Vault, Multiverse-Core, ProtocolLib, Towny, AuthMe, RushCore]
+soft-depend: [AuthMe, Essentials, Multiverse-Core, ProtocolLib, RushCore, SimpleClans, Towny, Vault]
 commands: 
   chatcontrol:
     aliases: [ccontrol, chatc, chc]
     description: Main ChatControl command. Type /chatcontrol list for commands.
 permissions:
+    chatcontrol.notify.overrideranged:
+        default: false
     chatcontrol.notify.whenmentioned:
         default: true
         description: Play sound to player when notified by another player and function is enabled.

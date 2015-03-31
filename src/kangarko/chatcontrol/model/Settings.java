@@ -112,6 +112,7 @@ public class Settings extends ConfHelper {
 			public static boolean RANGED_MODE;
 			public static String FORMAT;
 			public static String GLOBAL_FORMAT;
+			public static String SPY_FORMAT;
 			public static double RANGE;
 
 			private static void init() {
@@ -119,7 +120,8 @@ public class Settings extends ConfHelper {
 
 				ENABLED = getBoolean("Enabled", false);
 				FORMAT = getString("Message_Format", "%pl_prefix%player:%pl_suffix %message");
-				GLOBAL_FORMAT = getString("Global_Message_Format", "%pl_prefix%player:%pl_suffix %message");
+				GLOBAL_FORMAT = getString("Global_Message_Format", "&8[GLOBAL]&f %pl_prefix%player:%pl_suffix %message");
+				SPY_FORMAT = getString("Spy_Message_Format", "&8SPY: [%world&8]&f %pl_prefix%player:%pl_suffix %message");
 				RANGED_MODE = getBoolean("Ranged_Mode", false);
 				RANGE = getDouble("Range", 100);
 			}

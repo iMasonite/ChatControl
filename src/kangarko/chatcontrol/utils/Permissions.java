@@ -128,12 +128,9 @@ public class Permissions {
 		
 		// Permission to receive everyone's messages when ranged mode is enabled.
 		public static final String SPY = "chatcontrol.chat.spy";
-
-		// Permission to override the chat range (when enabled) and send message for everyone.
-		public static final String OVERRIDE_RANGED_ALL = "chatcontrol.chat.overrideranged";
 		
-		// TODO New in 5.0.8 Permission speak for all players in the entire world when ranged mode is enabled.
-		public static final String OVERRIDE_RANGED_WORLD = "chatcontrol.chat.overrideranged.world";
+		// Permission speak for all players in the entire world when ranged mode is enabled.
+		public static final String OVERRIDE_RANGED_WORLD = "chatcontrol.chat.overrideranged";
 	}
 
 	// TODO New in 5.0.0 Permission to view timed message from broadcaster. (true by default, needs to be explicitly denied)
