@@ -6,6 +6,8 @@ import kangarko.chatcontrol.hooks.TownyHook;
 import kangarko.chatcontrol.model.Settings;
 import kangarko.chatcontrol.utils.Common;
 import kangarko.chatcontrol.utils.Permissions;
+import kangarko.chatcontrol.utils.Writer;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -39,8 +41,8 @@ public class ChatFormatter implements Listener {
 		if (doesPluginExist("Multiverse-Core", "World Alias"))
 			mvHook = new MultiverseHook();
 
-        if (doesPluginExist("SimpleClans"))
-            clansHook = new SimpleClansHook();
+		if (doesPluginExist("SimpleClans"))
+			clansHook = new SimpleClansHook();
 
 		if (doesPluginExist("Towny", "Tested on v0.8x"))
 			townyHook = new TownyHook();
@@ -117,29 +119,37 @@ public class ChatFormatter implements Listener {
 				.replace("%clan", getClanTag(pl));
 	}
 
-	private List<Player> getLocalRecipients(Player pl, String message, double range) {
+	private List<Player> getLocalRecipients(Player sender, String message, double range) {
 		List<Player> recipients = new LinkedList<Player>();
 		try {
-			Location playerLocation = pl.getLocation();
+			Location playerLocation = sender.getLocation();
 			double squaredDistance = Math.pow(range, 2.0D);
 
-			for (Player recipient : Bukkit.getOnlinePlayers())
-				if (recipient.getWorld().equals(pl.getWorld()))
-					if (playerLocation.distanceSquared(recipient.getLocation()) <= squaredDistance || Common.hasPerm(pl, Permissions.Formatter.OVERRIDE_RANGED))
-						recipients.add(recipient);
+			for (Player prijemca : Bukkit.getOnlinePlayers()) {
+				if (Common.hasPerm(prijemca, Permissions.Formatter.SPY) || Common.hasPerm(sender, Permissions.Formatter.OVERRIDE_RANGED_ALL)) {
+					recipients.add(prijemca);
+					continue;
+				}
+
+				if (prijemca.getWorld().getName().equals(sender.getWorld().getName()))
+					if (Common.hasPerm(sender, Permissions.Formatter.OVERRIDE_RANGED_WORLD) || playerLocation.distanceSquared(prijemca.getLocation()) <= squaredDistance)
+						recipients.add(prijemca);
+			}
 
 			return recipients;
 		} catch (ArrayIndexOutOfBoundsException ex) {
 			Common.Debug("(Range Chat) Got " + ex.getMessage() + ", trying backup.");
+			Writer.Write(Writer.ERROR_FILE_PATH, "Range Chat", sender.getName() + ": \'" + message + "\' Resulted in error: " + ex.getMessage());
 
-			if (Common.hasPerm(pl, Permissions.Formatter.OVERRIDE_RANGED)) {
+			if (Common.hasPerm(sender, Permissions.Formatter.OVERRIDE_RANGED_WORLD) || Common.hasPerm(sender, Permissions.Formatter.OVERRIDE_RANGED_ALL)) {
 				for (Player recipient : Bukkit.getOnlinePlayers())
-					if (recipient.getWorld().equals(pl.getWorld()))
+					if (Common.hasPerm(sender, Permissions.Formatter.OVERRIDE_RANGED_ALL) || recipient.getWorld().equals(sender.getWorld()))
 						recipients.add(recipient);
+
 				return recipients;
 			}
 
-			for (Entity en : pl.getNearbyEntities(range, range, range))
+			for (Entity en : sender.getNearbyEntities(range, range, range))
 				if (en.getType() == EntityType.PLAYER)
 					recipients.add((Player) en);
 
@@ -220,11 +230,11 @@ public class ChatFormatter implements Listener {
 			return ChatColor.GOLD + "" + health;
 		return ChatColor.RED + "" + health;
 	}
-	
+
 	private boolean doesPluginExist(String plugin) {
 		return doesPluginExist(plugin, null);
 	}
-	
+
 	private boolean doesPluginExist(String plugin, String message) {
 		if (Bukkit.getPluginManager().getPlugin(plugin) != null) {
 			Common.Log("&f" + plugin + " integration enabled!" + (message == null ? "" : " (" + message + ")"));

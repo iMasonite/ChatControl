@@ -123,11 +123,17 @@ public class Permissions {
 		// Permission to use '&o' character make the messages italics.
 		public static final String ITALIC = "chatcontrol.chat.format.italic";
 
-		// Permission to speak in global chat when chat range is enabled (a player can speak to global chat by inserting '!' before the message).
+		// Permission to speak in global chat when chat range is enabled and message starts with '!'.
 		public static final String GLOBAL_CHAT = "chatcontrol.chat.global";
+		
+		// Permission to receive everyone's messages when ranged mode is enabled.
+		public static final String SPY = "chatcontrol.chat.spy";
 
-		// Permission to override the chat range (when enabled) and send message for players in the entire world.
-		public static final String OVERRIDE_RANGED = "chatcontrol.chat.overrideranged";
+		// Permission to override the chat range (when enabled) and send message for everyone.
+		public static final String OVERRIDE_RANGED_ALL = "chatcontrol.chat.overrideranged";
+		
+		// TODO New in 5.0.8 Permission speak for all players in the entire world when ranged mode is enabled.
+		public static final String OVERRIDE_RANGED_WORLD = "chatcontrol.chat.overrideranged.world";
 	}
 
 	// TODO New in 5.0.0 Permission to view timed message from broadcaster. (true by default, needs to be explicitly denied)
