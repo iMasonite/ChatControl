@@ -21,13 +21,13 @@ public class VaultHook {
 		if (economyProvider != null)
 			economy = economyProvider.getProvider();
 		else
-			Common.Log("Economy plugin not found");
+			Common.Log("&cEconomy plugin not found");
 
 		RegisteredServiceProvider<Chat> chatProvider = services.getRegistration(net.milkbowl.vault.chat.Chat.class);		
 		if (chatProvider != null)
 			chat = chatProvider.getProvider();
 		else
-			Common.Log("Permissions/Chat plugin not found, prefix and suffix will not work");
+			Common.LogInFrame(true, "You have enabled chat formatter", "but no permissions and chat", "plugin was found!");
 	}
 
 	public String getPlayerPrefix(Player pl) {
