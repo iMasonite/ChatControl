@@ -23,6 +23,10 @@ public class LagCatcher {
 	}
 
 	public static void end(String section) {
+		end(section, Settings.CATCH_LAG);
+	}
+	
+	public static void end(String section, int limit) {
 		if (Settings.CATCH_LAG == 0)
 			return;
 		
@@ -33,7 +37,7 @@ public class LagCatcher {
 
 		long lag = System.currentTimeMillis() - lagMap.remove(section);
 		
-		if (lag > Settings.CATCH_LAG)
+		if (lag > limit)
 			Common.Log("&3[&fLag&3] &7" + section + " took &f" + lag + " ms");
 	}
 }

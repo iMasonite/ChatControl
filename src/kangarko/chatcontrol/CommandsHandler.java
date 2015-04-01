@@ -8,7 +8,9 @@ import kangarko.chatcontrol.model.ConfHelper.ChatMessage;
 import kangarko.chatcontrol.model.Localization;
 import kangarko.chatcontrol.model.Settings;
 import kangarko.chatcontrol.utils.Common;
+import kangarko.chatcontrol.utils.LagCatcher;
 import kangarko.chatcontrol.utils.Permissions;
+import kangarko.chatcontrol.utils.VariableProcessor;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -43,7 +45,7 @@ public class CommandsHandler implements CommandExecutor {
 			return;
 		}
 
-		String argument = args[0];
+		String argument = args[0].toLowerCase();
 		String param = args.length > 1 && args[1].startsWith("-") ? args[1] : "";
 		String reason = "";
 
@@ -53,7 +55,7 @@ public class CommandsHandler implements CommandExecutor {
 		/**
 		 * MUTE COMMAND
 		 */
-		if ("mute".equalsIgnoreCase(argument) || "m".equalsIgnoreCase(argument)) {
+		if ("mute".equals(argument) || "m".equals(argument)) {
 			checkPerm(sender, Permissions.Commands.MUTE);
 
 			if (param.isEmpty())
@@ -74,7 +76,7 @@ public class CommandsHandler implements CommandExecutor {
 		/**
 		 * CLEAR COMMAND
 		 */
-		else if ("clear".equalsIgnoreCase(argument) || "c".equalsIgnoreCase(argument)) {
+		else if ("clear".equals(argument) || "c".equals(argument)) {
 			checkPerm(sender, Permissions.Commands.CLEAR);
 
 			if ((param.equalsIgnoreCase("-console") || param.equalsIgnoreCase("-c") || param.equalsIgnoreCase("-konzola"))
@@ -126,7 +128,7 @@ public class CommandsHandler implements CommandExecutor {
 		/**
 		 * FAKE COMMAND
 		 */
-		else if ("fake".equalsIgnoreCase(argument) || "f".equalsIgnoreCase(argument)) {
+		else if ("fake".equals(argument) || "f".equals(argument)) {
 			checkPerm(sender, Permissions.Commands.FAKE);
 
 			if (args.length < 2 || args.length > 3) {
@@ -175,7 +177,7 @@ public class CommandsHandler implements CommandExecutor {
 		/**
 		 * RELOAD COMMAND
 		 */
-		else if ("reload".equalsIgnoreCase(argument) || "znovunacitat".equalsIgnoreCase(argument) || "r".equalsIgnoreCase(argument)) {
+		else if ("reload".equals(argument) || "znovunacitat".equals(argument) || "r".equals(argument)) {
 			checkPerm(sender, Permissions.Commands.RELOAD);
 
 			try {
@@ -193,7 +195,7 @@ public class CommandsHandler implements CommandExecutor {
 		/**
 		 * LIST COMMAND
 		 */
-		else if ("commands".equalsIgnoreCase(argument) || "?".equals(argument) || "list".equalsIgnoreCase(argument) || "help".equalsIgnoreCase(argument)) {
+		else if ("commands".equals(argument) || "?".equals(argument) || "list".equals(argument) || "help".equals(argument)) {
 			checkPerm(sender, Permissions.Commands.LIST);
 
 			Common.tell(sender,
@@ -207,6 +209,25 @@ public class CommandsHandler implements CommandExecutor {
 					"  &f/chc fake &6<join/leave> &2[name] &e- Fake join/quit messages.",
 					"  &f/chc reload &e- Reload configuration.",
 					"  &f/chc list &e- Command list.");
+		} 
+
+		else if ("test".equals(argument)) {
+			if (args.length == 1) {
+				Common.tell(sender, "Usage: /chc test <processEngine>");
+				return;
+			}
+
+			if (sender.isOp() && Settings.DEBUG) {
+				try {
+					LagCatcher.start("test");
+					Common.tell(sender, "Method returned: " + VariableProcessor.process(reason, sender));
+					LagCatcher.end("test", 1);
+				} catch (Exception ex) {
+					Common.tell(sender, ChatColor.RED + ex.getClass().getSimpleName() + ": " + ex.getMessage());
+					ex.printStackTrace();
+				}
+			}
+
 		} else
 			Common.tell(sender, Localization.WRONG_ARGUMENTS);
 	}

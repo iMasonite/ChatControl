@@ -22,7 +22,7 @@ public class VaultHook {
 			economy = economyProvider.getProvider();
 		else
 			Common.Log("&cEconomy plugin not found");
-
+		
 		RegisteredServiceProvider<Chat> chatProvider = services.getRegistration(net.milkbowl.vault.chat.Chat.class);		
 		if (chatProvider != null)
 			chat = chatProvider.getProvider();
