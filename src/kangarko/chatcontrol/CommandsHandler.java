@@ -7,10 +7,10 @@ import kangarko.chatcontrol.model.ConfHelper;
 import kangarko.chatcontrol.model.ConfHelper.ChatMessage;
 import kangarko.chatcontrol.model.Localization;
 import kangarko.chatcontrol.model.Settings;
+import kangarko.chatcontrol.parser.ProcessingEngine;
 import kangarko.chatcontrol.utils.Common;
 import kangarko.chatcontrol.utils.LagCatcher;
 import kangarko.chatcontrol.utils.Permissions;
-import kangarko.chatcontrol.utils.VariableProcessor;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -217,10 +217,10 @@ public class CommandsHandler implements CommandExecutor {
 				return;
 			}
 
-			if (sender.isOp() && Settings.DEBUG) {
+			if (sender.isOp()) {
 				try {
 					LagCatcher.start("test");
-					Common.tell(sender, "Method returned: " + VariableProcessor.process(reason, sender));
+					Common.tell(sender, "Method returned: " + ProcessingEngine.process(reason, sender));
 					LagCatcher.end("test", 1);
 				} catch (Exception ex) {
 					Common.tell(sender, ChatColor.RED + ex.getClass().getSimpleName() + ": " + ex.getMessage());

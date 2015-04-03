@@ -27,7 +27,7 @@ public class ProtocolLibHook {
 	public static void init() {
 
 		if (Settings.Packets.TabComplete.DISABLE) {
-
+			
 			if (new File("spigot.yml").exists())
 				Common.Log("&aDetected spigot (or similar), it is recommended to use its inbuilt tab-complete instead.");
 
