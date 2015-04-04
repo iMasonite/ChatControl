@@ -15,11 +15,11 @@ public class LagCatcher {
 	public static void start(String section) {
 		if (Settings.CATCH_LAG == 0)
 			return;
-		
+
 		if (lagMap.containsKey(section))
 			Common.Debug("Lag of " + section + " already being measured!");
 
-		lagMap.put(section, System.currentTimeMillis());
+		lagMap.put(section, System.nanoTime());
 	}
 
 	public static void end(String section) {
@@ -35,9 +35,9 @@ public class LagCatcher {
 			return;
 		}
 
-		long lag = System.currentTimeMillis() - lagMap.remove(section);
+		double lag = (double) ((System.nanoTime() - lagMap.remove(section)) / 1_000_000D);
 		
 		if (lag > limit)
-			Common.Log("&3[&fLag&3] &7" + section + " took &f" + lag + " ms");
+			Common.Log("&3[&fLag&3] &7" + section + " took &f" + Common.threeDigits(lag) + " ms");
 	}
 }
