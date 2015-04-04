@@ -8,8 +8,8 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import kangarko.chatcontrol.ChatControl;
-import kangarko.chatcontrol.model.Localization;
-import kangarko.chatcontrol.model.Settings;
+import kangarko.chatcontrol.config.Localization;
+import kangarko.chatcontrol.config.Settings;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;

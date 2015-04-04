@@ -2,11 +2,11 @@ package kangarko.chatcontrol;
 
 import java.util.Random;
 
+import kangarko.chatcontrol.config.ConfHelper;
+import kangarko.chatcontrol.config.Localization;
+import kangarko.chatcontrol.config.Settings;
+import kangarko.chatcontrol.config.ConfHelper.ChatMessage;
 import kangarko.chatcontrol.hooks.RushCoreHook;
-import kangarko.chatcontrol.model.ConfHelper;
-import kangarko.chatcontrol.model.ConfHelper.ChatMessage;
-import kangarko.chatcontrol.model.Localization;
-import kangarko.chatcontrol.model.Settings;
 import kangarko.chatcontrol.parser.ProcessingEngine;
 import kangarko.chatcontrol.utils.Common;
 import kangarko.chatcontrol.utils.LagCatcher;

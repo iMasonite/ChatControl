@@ -1,6 +1,6 @@
 package kangarko.chatcontrol.filter;
 
-import kangarko.chatcontrol.model.Settings;
+import kangarko.chatcontrol.config.Settings;
 import kangarko.chatcontrol.utils.Common;
 
 import org.apache.logging.log4j.Level;

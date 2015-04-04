@@ -3,7 +3,7 @@ package kangarko.chatcontrol.hooks;
 import java.io.File;
 
 import kangarko.chatcontrol.ChatControl;
-import kangarko.chatcontrol.model.Settings;
+import kangarko.chatcontrol.config.Settings;
 import kangarko.chatcontrol.rules.ChatCeaser.PacketCancelledException;
 import kangarko.chatcontrol.utils.Common;
 import kangarko.chatcontrol.utils.Permissions;
@@ -25,9 +25,9 @@ public class ProtocolLibHook {
 	private static final JSONParser parser = new JSONParser();
 
 	public static void init() {
-
+		
 		if (Settings.Packets.TabComplete.DISABLE) {
-			
+		
 			if (new File("spigot.yml").exists())
 				Common.Log("&aDetected spigot (or similar), it is recommended to use its inbuilt tab-complete instead.");
 

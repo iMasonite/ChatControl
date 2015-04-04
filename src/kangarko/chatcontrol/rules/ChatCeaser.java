@@ -12,7 +12,7 @@ import java.util.Objects;
 import java.util.Random;
 
 import kangarko.chatcontrol.ChatControl;
-import kangarko.chatcontrol.model.Settings;
+import kangarko.chatcontrol.config.Settings;
 import kangarko.chatcontrol.utils.Common;
 import kangarko.chatcontrol.utils.LagCatcher;
 import kangarko.chatcontrol.utils.Writer;

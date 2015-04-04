@@ -12,8 +12,8 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 
 import kangarko.chatcontrol.ChatControl;
-import kangarko.chatcontrol.model.Localization;
-import kangarko.chatcontrol.model.Settings;
+import kangarko.chatcontrol.config.Localization;
+import kangarko.chatcontrol.config.Settings;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;

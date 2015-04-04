@@ -1,9 +1,9 @@
 package kangarko.chatcontrol;
 
+import kangarko.chatcontrol.config.Settings;
 import kangarko.chatcontrol.hooks.MultiverseHook;
 import kangarko.chatcontrol.hooks.SimpleClansHook;
 import kangarko.chatcontrol.hooks.TownyHook;
-import kangarko.chatcontrol.model.Settings;
 import kangarko.chatcontrol.utils.Common;
 import kangarko.chatcontrol.utils.Permissions;
 import kangarko.chatcontrol.utils.Writer;

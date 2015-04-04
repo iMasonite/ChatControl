@@ -13,7 +13,7 @@ import org.bukkit.Bukkit;
 
 public
 /** Critical warning:
- *  only God knows how
+ *  only @God knows how
  *  this */ class /** works! */ 
  ProcessingEngine {
 
@@ -160,15 +160,13 @@ class Code {
 		return pieces;
 	}
 
-	private List<CodePiece> parseCodePieces(String[] rawParts, Object objectToCast) {
+	private List<CodePiece> parseCodePieces(String[] rawPieces, Object objectToCast) {
 		List<CodePiece> allPieces = new ArrayList<>();
 
-		for (int i = 1; i < rawParts.length; i++) {
+		for (int i = 1; i < rawPieces.length; i++) {
 			// getValue(name, 1)
-			String rawPiece = rawParts[i];
-			CodePiece piece;
-
-			System.out.println("Parsing: " + rawPiece);
+			String rawPiece = rawPieces[i];
+			CodePiece parsedPiece;
 
 			if (rawPiece.contains("(") && rawPiece.contains(")")) {
 
@@ -180,7 +178,7 @@ class Code {
 
 				// no constructors
 				if (divided.length == 1) {
-					piece = new CodePiece(name, null);
+					parsedPiece = new CodePiece(name, null);
 
 				} else {
 					// 'name' and '1' are constructors
@@ -199,34 +197,39 @@ class Code {
 
 						else {
 							try {
-								constructors.add(Integer.parseInt(paramRaw), Integer.class);
+								Integer integerValue = Integer.parseInt(paramRaw);
+								constructors.add(integerValue, Integer.class);
 							} catch (Exception ex) {
 							}
 							try {
-								constructors.add(Double.parseDouble(paramRaw), Double.class);
+								Double doubleValue = Double.parseDouble(paramRaw);
+								constructors.add(doubleValue, Double.class);
 							} catch (Exception ex) {
 							}
 							try {
-								constructors.add(paramRaw.endsWith("F") ? Float.parseFloat(paramRaw.replace("F", "")) : null, Double.class);
+								Float floatValue = paramRaw.endsWith("F") ? Float.parseFloat(paramRaw.replace("F", "")) : null;
+								constructors.add(floatValue, Float.class);
 							} catch (Exception ex) {
 							}
 							try {
-								constructors.add(paramRaw.endsWith(".class") ? Class.forName(paramRaw.replace(".class", "")) : null, Double.class);
+								Class<?> classValue = paramRaw.endsWith(".class") ? Class.forName(paramRaw.replace(".class", "")) : null;
+								constructors.add(classValue, Class.class);
 							} catch (Exception ex) {
 							}
 							try {
-								constructors.add(paramRaw.equals("true") || paramRaw.equals("false") ? Boolean.parseBoolean(paramRaw) : null, Double.class);
+								Boolean booleanValue = paramRaw.equals("true") || paramRaw.equals("false") ? Boolean.parseBoolean(paramRaw) : null;
+								constructors.add(booleanValue, Boolean.class);
 							} catch (Exception ex) {
 							}
 						}
 					}
 
-					piece = new CodePiece(name, constructors);
+					parsedPiece = new CodePiece(name, constructors);
 				}
 			} else
-				piece = new CodePiece(rawPiece);
+				parsedPiece = new CodePiece(rawPiece);
 
-			allPieces.add(piece);
+			allPieces.add(parsedPiece);
 
 		}
 		return allPieces;
@@ -240,30 +243,6 @@ class Code {
 	private String getClassPath(Object obj){
 		return obj != null ? obj.getClass().getPackage().getName() + "." + obj.getClass().getSimpleName() : "";
 	}
-}
-
-enum OperationType {
-	// get the variable from a field or a method
-	GET,
-
-	// print all methods and fields to the console (NB: also executes methods if necessary)
-	LIST,
-
-	// do what method above does but only displays declared objects (not from parent classes)
-	LIST_DECLARED;
-
-	public static OperationType parseType(String str) {
-		try {
-			return valueOf(str.toUpperCase());
-		} catch (IllegalArgumentException ex) {
-			throw new IllegalArgumentException("Unknown type! Available: " + StringUtils.join(OperationType.values(), ", "));
-		}
-	}
-}
-
-enum CodeType {
-	FIELD,
-	METHOD
 }
 
 // A part of the java code
@@ -286,6 +265,8 @@ class CodePiece {
 		this.name = method;
 		this.type = type;
 		this.constructors = constructors;
+		
+		System.out.println("Recognized new " + type.toString().toLowerCase() + ": " + method);
 	}
 
 	public String getName() {
@@ -325,4 +306,28 @@ class Constructors {
 	public Class<?>[] getClasses() {
 		return classes.toArray(new Class[classes.size()]);
 	}
+}
+
+enum OperationType {
+	// get the variable from a field or a method
+	GET,
+
+	// print all methods and fields to the console (NB: also executes methods if necessary)
+	LIST,
+
+	// do what method above does but only displays declared objects (not from parent classes)
+	LIST_DECLARED;
+
+	public static OperationType parseType(String str) {
+		try {
+			return valueOf(str.toUpperCase());
+		} catch (IllegalArgumentException ex) {
+			throw new IllegalArgumentException("Unknown type! Available: " + StringUtils.join(OperationType.values(), ", "));
+		}
+	}
+}
+
+enum CodeType {
+	FIELD,
+	METHOD
 }

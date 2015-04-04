@@ -10,7 +10,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.Objects;
 
 import kangarko.chatcontrol.ChatControl;
-import kangarko.chatcontrol.model.Settings;
+import kangarko.chatcontrol.config.Settings;
 
 public class Writer {
 

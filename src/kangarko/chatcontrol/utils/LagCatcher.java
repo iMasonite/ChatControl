@@ -2,7 +2,7 @@ package kangarko.chatcontrol.utils;
 
 import java.util.HashMap;
 
-import kangarko.chatcontrol.model.Settings;
+import kangarko.chatcontrol.config.Settings;
 
 /**
  * Simple timings-like live lag catcher.

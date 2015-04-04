@@ -3,7 +3,7 @@ package kangarko.chatcontrol.filter;
 import java.util.logging.Filter;
 import java.util.logging.LogRecord;
 
-import kangarko.chatcontrol.model.Settings;
+import kangarko.chatcontrol.config.Settings;
 import kangarko.chatcontrol.utils.Common;
 
 public class ConsoleFilter implements Filter {

@@ -6,6 +6,10 @@ import java.util.List;
 import java.util.Random;
 import java.util.logging.Filter;
 
+import kangarko.chatcontrol.config.ConfHelper;
+import kangarko.chatcontrol.config.Settings;
+import kangarko.chatcontrol.config.ConfHelper.IllegalLocaleException;
+import kangarko.chatcontrol.config.ConfHelper.InBuiltFileMissingException;
 import kangarko.chatcontrol.filter.ConsoleFilter;
 import kangarko.chatcontrol.filter.Log4jFilter;
 import kangarko.chatcontrol.hooks.AuthMeHook;
@@ -16,10 +20,6 @@ import kangarko.chatcontrol.hooks.VaultHook;
 import kangarko.chatcontrol.listener.ChatListener;
 import kangarko.chatcontrol.listener.CommandListener;
 import kangarko.chatcontrol.listener.PlayerListener;
-import kangarko.chatcontrol.model.ConfHelper;
-import kangarko.chatcontrol.model.ConfHelper.IllegalLocaleException;
-import kangarko.chatcontrol.model.ConfHelper.InBuiltFileMissingException;
-import kangarko.chatcontrol.model.Settings;
 import kangarko.chatcontrol.rules.ChatCeaser;
 import kangarko.chatcontrol.utils.Common;
 import kangarko.chatcontrol.utils.LagCatcher;
@@ -34,7 +34,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-// FIXME Bad packet id on /reload ingame when OP
 public class ChatControl extends JavaPlugin {
 
 	private static ChatControl instance;
