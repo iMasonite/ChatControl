@@ -3,6 +3,8 @@ package kangarko.chatcontrol.parser;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import kangarko.chatcontrol.utils.Common;
@@ -14,7 +16,8 @@ import org.bukkit.Bukkit;
 public
 /** Critical warning:
  *  only @God knows how
- *  this */ class /** works! */ 
+ *  this */ class /** works!
+    @author kangarko */
  ProcessingEngine {
 
 	static final String CODE_DELIMITER = " -> ";
@@ -24,15 +27,25 @@ public
 	}
 
 	public static <T> Object process(String rawText, T objectToCast) throws Exception {
-		Input in = new Input(rawText, objectToCast);
+		Variable in = VariableCache.getInput(rawText);
+
+		if (in == null) {
+			in = new Variable(rawText, objectToCast);
+			VariableCache.cacheInput(rawText, in);
+
+			//Common.LogFromParser("&bNew Input: " + in);
+		} //else
+		//Common.LogFromParser("&eCached Input: " + in);
+
+		List<CodePiece> pieces = new ArrayList<>(Arrays.asList(in.getCode().getPieces()));
 
 		switch (in.getType()) {
 		case GET:
-			return executeMethodOrField(in.getCode().getCodeClazz(), in.getCast(), in.getCode().getPieces());
+			return executeMethodOrField(in.getCode().getCodeClazz(), in.getCast(), pieces);
 
 		case LIST:
 		case LIST_DECLARED:
-			return listClassContent(in.getCode().getCodeClazz(), in.getCast(), in.getCode().getPieces(), in.getType() == OperationType.LIST_DECLARED);
+			return listClassContent(in.getCode().getCodeClazz(), in.getCast(), pieces, in.getType() == OperationType.LIST_DECLARED);
 
 		default:
 			throw new RuntimeException("Unsupported mode: " + in.getType());
@@ -42,13 +55,13 @@ public
 	public static Object executeMethodOrField(Class<?> clazz, Object objectToInstance, List<CodePiece> parameters) throws Exception {
 		Object instance = tryMakeInstance(clazz, objectToInstance);
 
-		CodePiece param = parameters.remove(0);
-		Object obj = getFieldOrMethod(instance, param);
+		CodePiece code = parameters.remove(0);
+		Object returned = getFieldOrMethod(instance, code);
 
 		if (parameters.isEmpty())
-			return obj;
+			return returned;
 
-		return executeMethodOrField(obj.getClass(), obj, parameters);
+		return executeMethodOrField(returned.getClass(), returned, parameters);
 	}
 
 	public static Object listClassContent(Class<?> clazz, Object objectToInstance, List<CodePiece> parameters, boolean declaredOnly) throws Exception {
@@ -79,8 +92,12 @@ public
 		if (code.getType() == CodeType.FIELD)
 			return clazz.getField(code.getName()).get(instance);
 
-		else if (code.getType() == CodeType.METHOD)
-			return clazz.getMethod(code.getName(), code.getConstructorClasses()).invoke(instance, code.getConstructorValues());
+		else if (code.getType() == CodeType.METHOD) {
+			Method m = clazz.getMethod(code.getName(), code.getConstructorClasses());
+			Validate.isTrue(m.getReturnType() != Void.TYPE, "Method \'" + m.getName() + "\' does not return anything!");
+
+			return m.invoke(instance, code.getConstructorValues());
+		}
 
 		throw new NullPointerException("Unknown code type: " + code.getType());
 	}
@@ -91,21 +108,25 @@ public
 
 	private static void displayClassContentToConsole(Class<?> clazz, boolean declaredOnly) {
 		Common.LogInFrame(false, "&bFields in " + clazz);
+
 		for (Field f : declaredOnly ? clazz.getDeclaredFields() : clazz.getFields())
-			Common.Log(f.getType() + ": &f" + f.getName());
+			Common.LogFromParser(f.getType() + ": &f" + f.getName());
 
 		Common.LogInFrame(false, "&aMethods in " + clazz);
-		for (Method m : declaredOnly ? clazz.getDeclaredMethods() : clazz.getMethods())
-			Common.Log("&f" + m.getName() + "&7(" + StringUtils.join(m.getParameterTypes(), ", ") + ")");
+
+		for (Method m : declaredOnly ? clazz.getDeclaredMethods() : clazz.getMethods()) {
+			if (m.getReturnType() != Void.TYPE)
+				Common.LogFromParser("&f" + m.getName() + "&7(" + StringUtils.join(m.getParameterTypes(), ", ") + ") returns " + m.getReturnType().getSimpleName());
+		}
 	}
 }
 
-class Input {
+class Variable {
 	private final OperationType type;
 	private Object cast = null;
 	private final Code code;
 
-	Input(String raw, Object objectToCast) throws ReflectiveOperationException {
+	Variable(String raw, Object objectToCast) throws ReflectiveOperationException {
 		String[] divided = raw.split(ProcessingEngine.CODE_DELIMITER);
 		Validate.isTrue(divided.length == 2 || divided.length == 3, "Wrong input! Either specify mode and code OR mode, cast and code");
 
@@ -129,12 +150,21 @@ class Input {
 	public Code getCode() {
 		return code;
 	}
+
+	@Override
+	public String toString() {
+		return "Input {\n"
+				+ "  operation=" + type + "\n"
+				+ "  cast=" + (cast != null ? cast.getClass().getPackage() + "." + cast.getClass().getSimpleName() : "STATIC") + "\n"
+				+ "  code=" + code + "\n"
+				+ "}";
+	}
 }
 
 class Code {
 
 	private final Class<?> clazz;
-	private final List<CodePiece> pieces;
+	private CodePiece[] pieces;
 
 	Code(String rawLine) throws ReflectiveOperationException {
 		this(rawLine, null);
@@ -156,11 +186,20 @@ class Code {
 		return clazz;
 	}
 
-	public List<CodePiece> getPieces() {
+	public CodePiece[] getPieces() {
 		return pieces;
 	}
 
-	private List<CodePiece> parseCodePieces(String[] rawPieces, Object objectToCast) {
+	@Override
+	public String toString() {
+		return "Code {\n"
+				+ "    class=" + getClassPath(clazz) + "\n"
+				+ "    parts=[" + StringUtils.join(pieces, ", ") + "\n"
+				+ "    ]\n"
+				+ "  }";
+	}
+
+	private CodePiece[] parseCodePieces(String[] rawPieces, Object objectToCast) {
 		List<CodePiece> allPieces = new ArrayList<>();
 
 		for (int i = 1; i < rawPieces.length; i++) {
@@ -196,31 +235,34 @@ class Code {
 							constructors.add(paramRaw.substring(1, paramRaw.length() - 1), String.class);
 
 						else {
+							Object value;
 							try {
-								Integer integerValue = Integer.parseInt(paramRaw);
-								constructors.add(integerValue, Integer.class);
+								value = Integer.parseInt(paramRaw);
+								constructors.add(value, Integer.class);
 							} catch (Exception ex) {
 							}
 							try {
-								Double doubleValue = Double.parseDouble(paramRaw);
-								constructors.add(doubleValue, Double.class);
+								value = Double.parseDouble(paramRaw);
+								constructors.add(value, Double.class);
 							} catch (Exception ex) {
 							}
 							try {
-								Float floatValue = paramRaw.endsWith("F") ? Float.parseFloat(paramRaw.replace("F", "")) : null;
-								constructors.add(floatValue, Float.class);
+								value = paramRaw.endsWith("F") ? Float.parseFloat(paramRaw.replace("F", "")) : null;
+								constructors.add(value, Float.class);
 							} catch (Exception ex) {
 							}
 							try {
-								Class<?> classValue = paramRaw.endsWith(".class") ? Class.forName(paramRaw.replace(".class", "")) : null;
-								constructors.add(classValue, Class.class);
+								value = paramRaw.endsWith(".class") ? Class.forName(paramRaw.replace(".class", "")) : null;
+								constructors.add(value, Class.class);
 							} catch (Exception ex) {
 							}
 							try {
-								Boolean booleanValue = paramRaw.equals("true") || paramRaw.equals("false") ? Boolean.parseBoolean(paramRaw) : null;
-								constructors.add(booleanValue, Boolean.class);
+								value = paramRaw.equals("true") || paramRaw.equals("false") ? Boolean.parseBoolean(paramRaw) : null;
+								constructors.add(value, Boolean.class);
 							} catch (Exception ex) {
 							}
+							Validate.isTrue(constructors.notEmpty(), "Unknown parameter in constructor: " + paramRaw);
+							constructors.setEmpty();
 						}
 					}
 
@@ -232,12 +274,16 @@ class Code {
 			allPieces.add(parsedPiece);
 
 		}
-		return allPieces;
+		return allPieces.toArray(new CodePiece[allPieces.size()]);
 	}
 
 	private String getPackageVersion(){
 		String ver = Bukkit.getServer().getClass().getPackage().getName();
 		return ver.substring(ver.lastIndexOf('.') + 1);
+	}
+
+	private String getClassPath(Class<?> clazz){
+		return clazz != null ? clazz.getPackage().getName() + "." + clazz.getSimpleName() : "";
 	}
 
 	private String getClassPath(Object obj){
@@ -265,8 +311,8 @@ class CodePiece {
 		this.name = method;
 		this.type = type;
 		this.constructors = constructors;
-		
-		System.out.println("Recognized new " + type.toString().toLowerCase() + ": " + method);
+
+		System.out.println("Parsed new " + type.toString().toLowerCase() + ": " + method);
 	}
 
 	public String getName() {
@@ -284,6 +330,12 @@ class CodePiece {
 	public Class<?>[] getConstructorClasses() {
 		return constructors != null ? constructors.getClasses() : null;
 	}
+
+	@Override
+	public String toString() {
+		return " \n"
+				+ "      " + name + (type == CodeType.METHOD ? "(" + (constructors != null ? constructors : "") + ")" :  "\n      type=" + type + "\n");
+	}
 }
 
 // Example: method setName("kangarko") has 
@@ -292,10 +344,14 @@ class Constructors {
 	private final List<Class<?>> classes = new ArrayList<>();
 	private final List<Object> values = new ArrayList<>();
 
+	private boolean notEmpty = false; 
+
 	public void add(Object value, Class<?> clazz) {
 		if (value != null) {
 			values.add(value);
 			classes.add(clazz);
+
+			notEmpty = true;
 		}
 	}
 
@@ -305,6 +361,24 @@ class Constructors {
 
 	public Class<?>[] getClasses() {
 		return classes.toArray(new Class[classes.size()]);
+	}
+
+	public boolean notEmpty() {
+		return notEmpty;
+	}
+
+	public void setEmpty() {
+		notEmpty = false;
+	}
+
+	@Override
+	public String toString() {
+		String all = "";
+
+		for (Class<?> clazz : classes)
+			all = all.isEmpty() ? clazz.getSimpleName() : all + ", " + clazz.getSimpleName();
+
+			return all;
 	}
 }
 
@@ -330,4 +404,30 @@ enum OperationType {
 enum CodeType {
 	FIELD,
 	METHOD
+}
+
+class VariableCache {
+	private static HashMap<String, CachedVariable> cache = new HashMap<>();
+
+	public static Variable getInput(String rawInput) {
+		CachedVariable ci = cache.get(rawInput);
+
+		return ci != null ? ci.getInput() : null;
+	}
+
+	public static void cacheInput(String rawInput, Variable input) {
+		cache.put(rawInput, new CachedVariable(input));
+	}
+
+	private static class CachedVariable {
+		private final Variable input;
+
+		private CachedVariable(Variable input) {
+			this.input = input;
+		}
+
+		public Variable getInput() {
+			return input;
+		}
+	}
 }
