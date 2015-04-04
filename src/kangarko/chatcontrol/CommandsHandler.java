@@ -219,12 +219,15 @@ public class CommandsHandler implements CommandExecutor {
 
 			if (sender.isOp()) {
 				try {
+					if (reason.equals("1"))
+						reason = "get -> org.bukkit.Bukkit|getServicesManager()|getRegistration(net.milkbowl.vault.chat.Chat.class)|getProvider()|getPlayerPrefix(\"world\",\"kangarko\")";
+					
 					LagCatcher.start("test");
 					Common.tell(sender, "Method returned: " + ProcessingEngine.process(reason, sender));
-					LagCatcher.end("test", 1);
+					LagCatcher.end("test", 0);
 				} catch (Exception ex) {
-					Common.tell(sender, ChatColor.RED + ex.getClass().getSimpleName() + ": " + ex.getMessage());
 					ex.printStackTrace();
+					Common.tell(sender, ChatColor.RED + ex.getClass().getSimpleName() + ": " + ex.getMessage());
 				}
 			}
 
