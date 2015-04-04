@@ -1,6 +1,7 @@
 package kangarko.chatcontrol.utils;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
@@ -22,7 +23,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class Common {
 
-	private static final ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();	
+	private static final ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
+	private static final DecimalFormat format = new DecimalFormat("#.###");
 	private static String INTERNAL_PREFIX = "";
 
 	public static void addLoggingPrefix() {
@@ -194,6 +196,15 @@ public class Common {
 	public static void Log(String str) {
 		console.sendMessage(colorize(INTERNAL_PREFIX + str.replace("\n", "\n&r")));
 	}
+	
+	public static void LogFromParser(String str) {
+		console.sendMessage(colorize(str
+				.replace("{", "&6{&7")
+				.replace("}", "&6}&7")
+				.replace("=", " &d=&7 ")
+				.replace("[", "&b[&7")
+				.replace("]", "&b]&7")));
+	}
 
 	public static void LogInFrame(boolean disable, String... messages) {
 		Log(consoleLine());
@@ -360,5 +371,9 @@ public class Common {
 
 	public static String lastColor(String msg) {
 		return msg.substring(msg.lastIndexOf('&'), msg.length());
+	}
+	
+	public static String threeDigits(double value) {
+		return format.format(value);
 	}
 }
