@@ -8,10 +8,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import kangarko.chatcontrol.ChatControl;
-import kangarko.chatcontrol.config.Localization;
-import kangarko.chatcontrol.config.Settings;
-
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -20,6 +16,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import kangarko.chatcontrol.ChatControl;
+import kangarko.chatcontrol.config.Localization;
+import kangarko.chatcontrol.config.Settings;
 
 public class Common {
 

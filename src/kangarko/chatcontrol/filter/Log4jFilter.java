@@ -1,8 +1,5 @@
 package kangarko.chatcontrol.filter;
 
-import kangarko.chatcontrol.config.Settings;
-import kangarko.chatcontrol.utils.Common;
-
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Marker;
@@ -10,6 +7,9 @@ import org.apache.logging.log4j.core.Filter;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.Logger;
 import org.apache.logging.log4j.message.Message;
+
+import kangarko.chatcontrol.config.Settings;
+import kangarko.chatcontrol.utils.Common;
 
 public class Log4jFilter implements Filter {
 

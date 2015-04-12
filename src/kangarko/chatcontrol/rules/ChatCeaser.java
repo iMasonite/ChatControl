@@ -11,12 +11,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
-import kangarko.chatcontrol.ChatControl;
-import kangarko.chatcontrol.config.Settings;
-import kangarko.chatcontrol.utils.Common;
-import kangarko.chatcontrol.utils.LagCatcher;
-import kangarko.chatcontrol.utils.Writer;
-
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -27,6 +21,12 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+
+import kangarko.chatcontrol.ChatControl;
+import kangarko.chatcontrol.config.Settings;
+import kangarko.chatcontrol.utils.Common;
+import kangarko.chatcontrol.utils.LagCatcher;
+import kangarko.chatcontrol.utils.Writer;
 
 /**
  * Custom rule engine. Reads a set of rules from a file

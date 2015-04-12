@@ -1,5 +1,6 @@
 package kangarko.chatcontrol.hooks;
 
+import kangarko.rushcore.misc.PlayerInfo;
 
 // A hook with my custom plugin on my server.
 public class RushCoreHook {
@@ -9,15 +10,15 @@ public class RushCoreHook {
 	public static boolean moznoPrehratZvuk(String hraca) {
 		if (!zapnute)
 			return true;
-		return true;
-		//return PlayerInfo.of(hraca).zvukRp;
+		
+		return PlayerInfo.of(hraca).zvukRp;
 	}
 	
 	public static boolean moznoZobrazitSpravu(String hraca) {
 		if (!zapnute)
 			return true;
-		return true;
-		//return PlayerInfo.of(hraca).spravyTip;
+
+		return PlayerInfo.of(hraca).spravyTip;
 	}
 	
 	/*{

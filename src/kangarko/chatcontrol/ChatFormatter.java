@@ -1,12 +1,9 @@
 package kangarko.chatcontrol;
 
-import kangarko.chatcontrol.config.Settings;
-import kangarko.chatcontrol.hooks.MultiverseHook;
-import kangarko.chatcontrol.hooks.SimpleClansHook;
-import kangarko.chatcontrol.hooks.TownyHook;
-import kangarko.chatcontrol.utils.Common;
-import kangarko.chatcontrol.utils.Permissions;
-import kangarko.chatcontrol.utils.Writer;
+import java.util.Calendar;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -18,10 +15,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-import java.util.Calendar;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.regex.Pattern;
+import kangarko.chatcontrol.config.Settings;
+import kangarko.chatcontrol.hooks.MultiverseHook;
+import kangarko.chatcontrol.hooks.SimpleClansHook;
+import kangarko.chatcontrol.hooks.TownyHook;
+import kangarko.chatcontrol.utils.Common;
+import kangarko.chatcontrol.utils.Permissions;
+import kangarko.chatcontrol.utils.Writer;
 
 public class ChatFormatter implements Listener {
 

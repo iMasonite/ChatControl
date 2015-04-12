@@ -7,11 +7,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import kangarko.chatcontrol.utils.Common;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
+
+import kangarko.chatcontrol.utils.Common;
 
 public
 /** Critical warning:

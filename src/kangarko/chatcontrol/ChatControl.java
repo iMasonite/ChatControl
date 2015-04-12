@@ -6,10 +6,18 @@ import java.util.List;
 import java.util.Random;
 import java.util.logging.Filter;
 
+import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
+
 import kangarko.chatcontrol.config.ConfHelper;
-import kangarko.chatcontrol.config.Settings;
 import kangarko.chatcontrol.config.ConfHelper.IllegalLocaleException;
 import kangarko.chatcontrol.config.ConfHelper.InBuiltFileMissingException;
+import kangarko.chatcontrol.config.Settings;
 import kangarko.chatcontrol.filter.ConsoleFilter;
 import kangarko.chatcontrol.filter.Log4jFilter;
 import kangarko.chatcontrol.hooks.AuthMeHook;
@@ -25,14 +33,6 @@ import kangarko.chatcontrol.utils.Common;
 import kangarko.chatcontrol.utils.LagCatcher;
 import kangarko.chatcontrol.utils.Permissions;
 import kangarko.chatcontrol.utils.UpdateCheck;
-
-import org.bukkit.Bukkit;
-import org.bukkit.World;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 public class ChatControl extends JavaPlugin {
 

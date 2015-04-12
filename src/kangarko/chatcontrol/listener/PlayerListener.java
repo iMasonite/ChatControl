@@ -1,15 +1,5 @@
 package kangarko.chatcontrol.listener;
 
-import kangarko.chatcontrol.ChatControl;
-import kangarko.chatcontrol.PlayerCache;
-import kangarko.chatcontrol.config.Localization;
-import kangarko.chatcontrol.config.Settings;
-import kangarko.chatcontrol.hooks.RushCoreHook;
-import kangarko.chatcontrol.utils.Common;
-import kangarko.chatcontrol.utils.LagCatcher;
-import kangarko.chatcontrol.utils.Permissions;
-import kangarko.chatcontrol.utils.UpdateCheck;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,6 +11,16 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent.Result;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+
+import kangarko.chatcontrol.ChatControl;
+import kangarko.chatcontrol.PlayerCache;
+import kangarko.chatcontrol.config.Localization;
+import kangarko.chatcontrol.config.Settings;
+import kangarko.chatcontrol.hooks.RushCoreHook;
+import kangarko.chatcontrol.utils.Common;
+import kangarko.chatcontrol.utils.LagCatcher;
+import kangarko.chatcontrol.utils.Permissions;
+import kangarko.chatcontrol.utils.UpdateCheck;
 
 public class PlayerListener implements Listener {
 

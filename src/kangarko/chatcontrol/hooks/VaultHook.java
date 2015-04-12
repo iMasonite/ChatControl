@@ -1,13 +1,13 @@
 package kangarko.chatcontrol.hooks;
 
-import kangarko.chatcontrol.utils.Common;
-import net.milkbowl.vault.chat.Chat;
-import net.milkbowl.vault.economy.Economy;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicesManager;
+
+import kangarko.chatcontrol.utils.Common;
+import net.milkbowl.vault.chat.Chat;
+import net.milkbowl.vault.economy.Economy;
 
 public class VaultHook {
 

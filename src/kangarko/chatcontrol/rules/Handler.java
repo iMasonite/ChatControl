@@ -3,9 +3,9 @@ package kangarko.chatcontrol.rules;
 import java.util.List;
 import java.util.Objects;
 
-import kangarko.chatcontrol.utils.Common;
-
 import org.apache.commons.lang.Validate;
+
+import kangarko.chatcontrol.utils.Common;
 
 /**
  * Custom handler that handles message caught by {@link Rule}

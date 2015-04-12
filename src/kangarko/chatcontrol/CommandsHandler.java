@@ -2,16 +2,6 @@ package kangarko.chatcontrol;
 
 import java.util.Random;
 
-import kangarko.chatcontrol.config.ConfHelper;
-import kangarko.chatcontrol.config.Localization;
-import kangarko.chatcontrol.config.Settings;
-import kangarko.chatcontrol.config.ConfHelper.ChatMessage;
-import kangarko.chatcontrol.hooks.RushCoreHook;
-import kangarko.chatcontrol.parser.ProcessingEngine;
-import kangarko.chatcontrol.utils.Common;
-import kangarko.chatcontrol.utils.LagCatcher;
-import kangarko.chatcontrol.utils.Permissions;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -19,6 +9,16 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import kangarko.chatcontrol.config.ConfHelper;
+import kangarko.chatcontrol.config.ConfHelper.ChatMessage;
+import kangarko.chatcontrol.config.Localization;
+import kangarko.chatcontrol.config.Settings;
+import kangarko.chatcontrol.hooks.RushCoreHook;
+import kangarko.chatcontrol.parser.ProcessingEngine;
+import kangarko.chatcontrol.utils.Common;
+import kangarko.chatcontrol.utils.LagCatcher;
+import kangarko.chatcontrol.utils.Permissions;
 
 public class CommandsHandler implements CommandExecutor {
 

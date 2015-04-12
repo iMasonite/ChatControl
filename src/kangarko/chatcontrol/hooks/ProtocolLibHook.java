@@ -2,12 +2,6 @@ package kangarko.chatcontrol.hooks;
 
 import java.io.File;
 
-import kangarko.chatcontrol.ChatControl;
-import kangarko.chatcontrol.config.Settings;
-import kangarko.chatcontrol.rules.ChatCeaser.PacketCancelledException;
-import kangarko.chatcontrol.utils.Common;
-import kangarko.chatcontrol.utils.Permissions;
-
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -18,6 +12,12 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
+
+import kangarko.chatcontrol.ChatControl;
+import kangarko.chatcontrol.config.Settings;
+import kangarko.chatcontrol.rules.ChatCeaser.PacketCancelledException;
+import kangarko.chatcontrol.utils.Common;
+import kangarko.chatcontrol.utils.Permissions;
 
 public class ProtocolLibHook {
 

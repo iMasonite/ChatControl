@@ -9,13 +9,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-import kangarko.chatcontrol.ChatControl;
-import kangarko.chatcontrol.utils.Common;
-import kangarko.chatcontrol.utils.Writer;
-
 import org.apache.commons.lang.Validate;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.YamlConfiguration;
+
+import kangarko.chatcontrol.ChatControl;
+import kangarko.chatcontrol.utils.Common;
+import kangarko.chatcontrol.utils.Writer;
 
 public abstract class ConfHelper {
 
