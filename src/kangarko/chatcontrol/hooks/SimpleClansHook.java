@@ -20,6 +20,6 @@ public class SimpleClansHook {
 		if (clanPl != null)
 			return clanPl.getClan().getColorTag();
 
-		return null;
+		return "";
 	}
 }
