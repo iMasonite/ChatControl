@@ -434,9 +434,9 @@ public final class ChatCeaser {
 	private String parsePacketRule(Player player, String msg) throws PacketCancelledException {
 		if (msg == null || msg.isEmpty())
 			return msg;
-
+		
 		for (Rule standardrule : rulesMap.get(PACKET)) {
-			if (standardrule.matches(msg.toLowerCase())) {				
+			if (standardrule.matches(Common.stripColors(msg.toLowerCase()))) {				
 				PacketRule rule = standardrule.getPacketRule();
 				Objects.requireNonNull(rule, "Malformed rule - must be a packet rule: " + standardrule);
 
