@@ -236,7 +236,7 @@ public class CommandsHandler implements CommandExecutor {
 	}
 
 	private void checkPerm(CommandSender sender, String perm) throws InsufficientPermissionException {
-		if (!Common.hasPerm(sender, perm))
+		if (sender instanceof Player && !Common.hasPerm(sender, perm))
 			throw new InsufficientPermissionException(perm);
 	}
 }
