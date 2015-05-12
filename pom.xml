@@ -1,0 +1,82 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>kangarko.chatcontrol</groupId>
+	<artifactId>ChatControl</artifactId>
+	<name>ChatControl</name>
+	<description>An open source complete chat solution for Bukkit.</description>
+		<version>5.0.8</version>
+
+	<properties>
+		<bukkitVersion>1.4.7-R1.0</bukkitVersion>
+		<mainClass>kangarko.chatcontrol.ChatControl</mainClass>
+		<hardDepend></hardDepend>
+		<softDepend>AuthMe, Essentials, Multiverse-Core, ProtocolLib, RushCore, SimpleClans, Towny, Vault</softDepend>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.bukkit</groupId>
+			<artifactId>bukkit</artifactId>
+			<version>${bukkitVersion}</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<finalName>${project.artifactId}</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>2.3</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<artifactSet>
+								<includes>
+									<include>kangarko.chatcontrol</include>
+								</includes>
+							</artifactSet>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>com.github.goldin</groupId>
+				<artifactId>copy-maven-plugin</artifactId>
+				<version>0.2.5</version>
+				<executions>
+					<execution>
+						<id>deploy-to-local-directory</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<skipIdentical>false</skipIdentical>
+							<failIfNotFound>false</failIfNotFound>
+							<resources>
+								<resource>
+									<description>Copy artifact to another directory</description>
+									<targetPath>${basedir}/../DEBUGSERVER/TekkitLite/plugins</targetPath>
+									<directory>${project.build.directory}</directory>
+									<includes>
+										<include>ChatControl.jar</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<url>http://www.spigotmc.org/resources/chatcontrol.271/</url>
+</project>
