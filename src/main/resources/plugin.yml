@@ -1,8 +1,11 @@
-name: ChatControl
-main: kangarko.chatcontrol.ChatControl
-version: 5.0.8
+name: ${artifactId}
+main: ${mainClass}
+version: ${project.version}
+description: ${project.description}
 author: kangarko
-soft-depend: [AuthMe, Essentials, Multiverse-Core, ProtocolLib, RushCore, SimpleClans, Towny, Vault]
+authors: [${authors}]
+depend: [${hardDepend}]
+softdepend: [${softDepend}]
 commands: 
   chatcontrol:
     aliases: [ccontrol, chatc, chc]

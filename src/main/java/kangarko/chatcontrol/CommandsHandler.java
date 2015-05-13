@@ -1,7 +1,5 @@
 package kangarko.chatcontrol;
 
-import java.util.Random;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -14,7 +12,6 @@ import kangarko.chatcontrol.config.ConfHelper;
 import kangarko.chatcontrol.config.ConfHelper.ChatMessage;
 import kangarko.chatcontrol.config.Localization;
 import kangarko.chatcontrol.config.Settings;
-import kangarko.chatcontrol.hooks.RushCoreHook;
 import kangarko.chatcontrol.parser.ProcessingEngine;
 import kangarko.chatcontrol.utils.Common;
 import kangarko.chatcontrol.utils.LagCatcher;
@@ -37,11 +34,6 @@ public class CommandsHandler implements CommandExecutor {
 
 	private void handleCommand(CommandSender sender, String[] args) throws InsufficientPermissionException {
 		if (args.length == 0) {
-			Common.tell(sender,
-					"&8-----------------------------------------------------|",
-					"&3ChatControl &8// &fRunning &7v" + ChatControl.instance().getDescription().getVersion(),
-					"&3ChatControl &8// &fBy &7kangarko &f© 2013 - 2015",
-					(!RushCoreHook.zapnute && Bukkit.getIp().startsWith("93.91") ? "&3ChatControl &8// &fNavstivte: &7http://rushmine.6f.sk" + (new Random().nextInt(5) == 1 ? " &b< Prid si zahrat!" : "") : ""));
 			return;
 		}
 

@@ -205,7 +205,7 @@ public abstract class ConfHelper {
 
 	private static <T> void validate(String path, T def) {
 		if (file == null)
-			throw new IllegalStateException("Inbuilt config doesn't contain " + def.getClass().getTypeName() + " at \"" + path + "\". Is it outdated?");
+			throw new IllegalStateException("Inbuilt config doesn't contain " + def.getClass().getSimpleName() + " at \"" + path + "\". Is it outdated?");
 
 		save = true;
 		Common.Log("&fUpdating " + file.getName() + " with &b\'&f" + path + "&b\' &f-> &b\'&f" + def + "&b\'&r");

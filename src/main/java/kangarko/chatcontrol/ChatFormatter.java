@@ -16,9 +16,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import kangarko.chatcontrol.config.Settings;
-import kangarko.chatcontrol.hooks.MultiverseHook;
-import kangarko.chatcontrol.hooks.SimpleClansHook;
-import kangarko.chatcontrol.hooks.TownyHook;
 import kangarko.chatcontrol.utils.Common;
 import kangarko.chatcontrol.utils.Permissions;
 import kangarko.chatcontrol.utils.Writer;
@@ -32,21 +29,6 @@ public class ChatFormatter implements Listener {
 	private final Pattern UNDERLINE_REGEX = Pattern.compile("(?i)&([N])");
 	private final Pattern ITALIC_REGEX = Pattern.compile("(?i)&([O])");
 	private final Pattern RESET_REGEX = Pattern.compile("(?i)&([R])");
-
-	private MultiverseHook mvHook;
-	private SimpleClansHook clansHook;
-	private TownyHook townyHook;
-
-	public ChatFormatter() {
-		if (doesPluginExist("Multiverse-Core", "World Alias"))
-			mvHook = new MultiverseHook();
-
-		if (doesPluginExist("SimpleClans"))
-			clansHook = new SimpleClansHook();
-
-		if (doesPluginExist("Towny", "Tested on v0.8x"))
-			townyHook = new TownyHook();
-	}
 
 	@EventHandler(ignoreCancelled = true)
 	public void onChatFormat(AsyncPlayerChatEvent e) {
@@ -110,18 +92,12 @@ public class ChatFormatter implements Listener {
 	public String replacePlayerVariables(Player pl, String format) {
 		String world = pl.getWorld().getName();
 
-		if (ChatControl.instance().authMe != null)
-			format = format.replace("%countrycode", ChatControl.instance().authMe.getCountryCode(pl)).replace("%countryname", ChatControl.instance().authMe.getCountryName(pl));
-
 		return format
 				.replace("%pl_prefix", formatColor(ChatControl.instance().vault.getPlayerPrefix(pl)))
 				.replace("%pl_suffix", formatColor(ChatControl.instance().vault.getPlayerSuffix(pl)))
-				.replace("%world", getWorldAlias(world))
+				.replace("%world", world)
 				.replace("%health", formatHealth(pl) + ChatColor.RESET)
-				.replace("%player", pl.getName())
-				.replace("%town", getTown(pl))
-				.replace("%nation", getNation(pl))
-				.replace("%clan", getClanTag(pl));
+				.replace("%player", pl.getName());
 	}
 
 	private List<Player> getLocalRecipients(Player sender, String message, double range) {
@@ -235,145 +211,4 @@ public class ChatFormatter implements Listener {
 		return ChatColor.RED + "" + health;
 	}
 
-	private boolean doesPluginExist(String plugin) {
-		return doesPluginExist(plugin, null);
-	}
-
-	private boolean doesPluginExist(String plugin, String message) {
-		if (Bukkit.getPluginManager().getPlugin(plugin) != null) {
-			Common.Log("&fHooked with: " + plugin + (message == null ? "" : " (" + message + ")"));
-			return true;
-		}
-		return false;
-	}
-
-	private String getWorldAlias(String world) {
-		if (mvHook == null)
-			return world;
-
-		return mvHook.getColoredAlias(world);
-	}
-
-	private String getNation(Player pl) {
-		if (townyHook == null)
-			return "";
-
-		return townyHook.getNation(pl);
-	}
-
-	private String getTown(Player pl) {
-		if (townyHook == null)
-			return "";
-
-		return townyHook.getTownName(pl);
-	}
-
-	private String getClanTag(Player pl) {
-		if (clansHook == null)
-			return "";
-
-		return clansHook.getClanTag(pl);
-	}
 }
-
-/*class Experimental {
-
-	enum ClickAction {
-		RUN_COMMAND,
-		SUGGEST_COMMAND;
-	}
-
-	enum HoverAction {
-		SHOW_TEXT,
-	}
-
-	@SuppressWarnings("unchecked")
-	public static class JsonBuilder {
-
-		private JSONObject json = new JSONObject();
-
-		public JsonBuilder() {
-			this("");
-		}
-
-		public JsonBuilder(String message) {
-			JSONArray array = new JSONArray();
-			JSONObject extra = new JSONObject();
-
-			extra.put("text", message);
-			array.add(extra);
-
-			json.put("extra", array);
-			json.put("text", "");
-		}
-
-		public JsonBuilder add(String message) {
-			JSONObject extra = new JSONObject();
-
-			extra.put("text", message);
-
-			putNewMapping(extra);
-
-			return this;
-		}
-
-		public JsonBuilder setClickAction(ClickAction action, String value) {
-			JSONObject event = new JSONObject();
-
-			event.put("action", action.toString().toLowerCase());
-			event.put("value", value);
-
-			insertToLastMapping("clickEvent", event);
-
-			return this;
-		}
-
-		public JsonBuilder setHoverAction(HoverAction action, String value) {
-			JSONObject event = new JSONObject();
-
-			event.put("action", action.toString().toLowerCase());
-			event.put("value", value);
-
-			insertToLastMapping("hoverEvent", event);
-
-			return this;
-		}
-
-		// ------------- Helpers
-
-		private void insertToLastMapping(String key, Object obj) {
-			JSONArray array = (JSONArray) json.get("extra");
-			JSONObject last = (JSONObject) array.get(array.size() - 1);
-
-			last.put(key, obj);
-			json.put("extra", array);
-		}
-
-		private void putNewMapping(Object obj) {
-			JSONArray array = (JSONArray) json.get("extra");
-
-			array.add(obj);
-			json.put("extra", array);
-		}
-
-		// ------------- Final methods
-
-		public String toJSONString() {
-			return json.toJSONString();
-		}
-
-		public void send(Player badass) {
-			try {
-				System.out.println("Sending: " + json.toJSONString());
-
-				IChatBaseComponent comp = ChatSerializer.a( Common.colorize(json.toJSONString()) );
-				PacketPlayOutChat packet = new PacketPlayOutChat(comp);
-
-				((CraftPlayer) badass).getHandle().playerConnection.sendPacket(packet);
-			} catch (Exception ex) {
-				Common.tell(badass, "&cSeems like an error occured, hahaha");
-				ex.printStackTrace();
-			}
-		}
-	}
-}*/

@@ -10,7 +10,6 @@ import kangarko.chatcontrol.ChatControl;
 import kangarko.chatcontrol.PlayerCache;
 import kangarko.chatcontrol.config.Localization;
 import kangarko.chatcontrol.config.Settings;
-import kangarko.chatcontrol.hooks.RushCoreHook;
 import kangarko.chatcontrol.utils.Common;
 import kangarko.chatcontrol.utils.LagCatcher;
 import kangarko.chatcontrol.utils.Permissions;
@@ -105,11 +104,11 @@ public class CommandListener implements Listener {
 			if (ChatControl.instance().ess != null && (command.startsWith("/r ") || command.startsWith("/reply "))) {
 				Player reply = ChatControl.instance().ess.getReplyTo(pl.getName());
 
-				if (reply != null && (Common.hasPerm(reply, Permissions.Notify.WHEN_MENTIONED) || RushCoreHook.moznoPrehratZvuk(reply.getName())))
+				if (reply != null && (Common.hasPerm(reply, Permissions.Notify.WHEN_MENTIONED)))
 					reply.playSound(reply.getLocation(), Settings.SoundNotify.SOUND.sound, Settings.SoundNotify.SOUND.volume, Settings.SoundNotify.SOUND.pitch);
 			} else if (args.length > 2) {
 				Player player = Bukkit.getPlayer(args[1]);
-				if (player == null || !player.isOnline() || !RushCoreHook.moznoPrehratZvuk(player.getName()))
+				if (player == null || !player.isOnline())
 					break sound;
 
 				player.playSound(player.getLocation(), Settings.SoundNotify.SOUND.sound, Settings.SoundNotify.SOUND.volume, Settings.SoundNotify.SOUND.pitch);

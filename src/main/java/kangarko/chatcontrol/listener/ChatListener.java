@@ -11,7 +11,6 @@ import kangarko.chatcontrol.ChatControl;
 import kangarko.chatcontrol.PlayerCache;
 import kangarko.chatcontrol.config.Localization;
 import kangarko.chatcontrol.config.Settings;
-import kangarko.chatcontrol.hooks.RushCoreHook;
 import kangarko.chatcontrol.utils.Common;
 import kangarko.chatcontrol.utils.Permissions;
 import kangarko.chatcontrol.utils.Writer;
@@ -128,7 +127,7 @@ public class ChatListener implements Listener {
 		if (Settings.Writer.ENABLED && !Settings.Writer.WHITELIST_PLAYERS.contains(pl.getName().toLowerCase()))
 			Writer.Write(Writer.CHAT_FILE_PATH, pl.getName(), message);
 
-		if (Settings.SoundNotify.ENABLED && !RushCoreHook.zapnute)
+		if (Settings.SoundNotify.ENABLED)
 			if (Settings.SoundNotify.CHAT_PREFIX.equalsIgnoreCase("none")) {
 				for (Player online : Bukkit.getOnlinePlayers())
 					if (message.toLowerCase().contains(online.getName().toLowerCase()) && canSoundNotify(online.getName()) && Common.hasPerm(online, Permissions.Notify.WHEN_MENTIONED))

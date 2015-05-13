@@ -19,11 +19,7 @@ import kangarko.chatcontrol.config.ConfHelper.IllegalLocaleException;
 import kangarko.chatcontrol.config.ConfHelper.InBuiltFileMissingException;
 import kangarko.chatcontrol.config.Settings;
 import kangarko.chatcontrol.filter.ConsoleFilter;
-import kangarko.chatcontrol.filter.Log4jFilter;
-import kangarko.chatcontrol.hooks.AuthMeHook;
 import kangarko.chatcontrol.hooks.EssentialsHook;
-import kangarko.chatcontrol.hooks.ProtocolLibHook;
-import kangarko.chatcontrol.hooks.RushCoreHook;
 import kangarko.chatcontrol.hooks.VaultHook;
 import kangarko.chatcontrol.listener.ChatListener;
 import kangarko.chatcontrol.listener.CommandListener;
@@ -48,7 +44,6 @@ public class ChatControl extends JavaPlugin {
 
 	public EssentialsHook ess;
 	public VaultHook vault;
-	public AuthMeHook authMe;
 	public ChatFormatter formatter;	
 	public ChatCeaser chatCeaser;
 
@@ -71,34 +66,18 @@ public class ChatControl extends JavaPlugin {
 			if (doesPluginExist("Vault"))
 				vault = new VaultHook();
 
-			if (doesPluginExist("AuthMe"))
-				authMe = new AuthMeHook();
-			
-			if (doesPluginExist("RushCore"))
-				RushCoreHook.zapnute = true;
-
 			getServer().getPluginManager().registerEvents(new ChatListener(), this);
 			getServer().getPluginManager().registerEvents(new PlayerListener(), this);
 			getServer().getPluginManager().registerEvents(new CommandListener(), this);
 
-			if (Settings.Console.FILTER_ENABLED)
-				try {
-					Log4jFilter.init();
-					Common.Debug("Console filtering now using Log4j Filter.");
-				} catch (NoClassDefFoundError err) {
+			if (Settings.Console.FILTER_ENABLED) {
 					Filter filter = new ConsoleFilter();
 					for (Plugin plugin : getServer().getPluginManager().getPlugins())
 						plugin.getLogger().setFilter(filter);
-
 					Bukkit.getLogger().setFilter(filter);
 					Common.Debug("Console filtering initiated (MC 1.6.4 and lower).");
-				}
-
-			if (Settings.Packets.ENABLED)
-				if (doesPluginExist("ProtocolLib")) {
-					ProtocolLibHook.init();
-				} else
-					Common.LogInFrame(false, "Cannot enable packet features!", "Required plugin missing: ProtocolLib");
+			}
+				
 
 			if (Settings.Chat.Formatter.ENABLED)
 				if (vault != null) {
@@ -166,7 +145,6 @@ public class ChatControl extends JavaPlugin {
 		playerData.clear();
 		ipLastLogin.clear();
 
-		RushCoreHook.zapnute = false;
 		UpdateCheck.needsUpdate = false;
 		getServer().getScheduler().cancelTasks(this);
 
@@ -176,7 +154,6 @@ public class ChatControl extends JavaPlugin {
 	private void scheduleTimedMessages() {
 		final HashMap<String, Integer> broadcasterIndexes = new HashMap<String, Integer>();
 		final HashMap<String, List<String>> broadcasterCache = new HashMap<>();
-		final Random rand = new Random();
 
 		final HashMap<String, List<String>> timed = Settings.Messages.TIMED;
 
@@ -200,6 +177,7 @@ public class ChatControl extends JavaPlugin {
 
 			@Override
 			public void run() {
+		final Random rand = new Random();
 				LagCatcher.start("timed messages");
 				
 				for (String world : timed.keySet()) {
@@ -245,7 +223,7 @@ public class ChatControl extends JavaPlugin {
 					
 					if (world.equalsIgnoreCase("global")) {
 						for (Player online : getServer().getOnlinePlayers())
-							if (!timed.keySet().contains(online.getWorld().getName()) && Common.hasPerm(online, Permissions.VIEW_TIMED_MESSAGES) && RushCoreHook.moznoZobrazitSpravu(online.getName()))
+							if (!timed.keySet().contains(online.getWorld().getName()) && Common.hasPerm(online, Permissions.VIEW_TIMED_MESSAGES))
 								Common.tell(online, msg.replace("%world", online.getWorld().getName()));
 
 					} else {
@@ -255,7 +233,7 @@ public class ChatControl extends JavaPlugin {
 							Common.Warn("World \"" + world + "\" doesn't exist. No timed messages broadcast.");
 						else
 							for (Player online : bukkitworld.getPlayers())
-								if (Common.hasPerm(online, Permissions.VIEW_TIMED_MESSAGES) && RushCoreHook.moznoZobrazitSpravu(online.getName()))
+								if (Common.hasPerm(online, Permissions.VIEW_TIMED_MESSAGES))
 									Common.tell(online, msg.replace("%world", world));
 					}
 				}

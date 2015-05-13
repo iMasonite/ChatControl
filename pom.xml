@@ -6,14 +6,26 @@
 	<artifactId>ChatControl</artifactId>
 	<name>ChatControl</name>
 	<description>An open source complete chat solution for Bukkit.</description>
-		<version>5.0.8</version>
+	<version>5.0.8.1</version>
 
 	<properties>
+		<authors>kangarko, iMasonite</authors>
 		<bukkitVersion>1.4.7-R1.0</bukkitVersion>
 		<mainClass>kangarko.chatcontrol.ChatControl</mainClass>
 		<hardDepend></hardDepend>
-		<softDepend>AuthMe, Essentials, Multiverse-Core, ProtocolLib, RushCore, SimpleClans, Towny, Vault</softDepend>
+		<softDepend>Essentials, Vault</softDepend>
 	</properties>
+
+	<repositories>
+		<repository>
+			<id>bukkit-repo</id>
+			<url>http://repo.bukkit.org/content/repositories/releases/</url>
+		</repository>
+		<repository>
+			<id>local_repo</id>
+			<url>file://${project.basedir}/repo/</url>
+		</repository>
+	</repositories>
 
 	<dependencies>
 		<dependency>
@@ -30,6 +42,13 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>com.earth2me</groupId>
+			<artifactId>Essentials</artifactId>
+			<version>2.13.1</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/repo/Essentials.jar</systemPath>
+		</dependency>
 	</dependencies>
 
 	<build>

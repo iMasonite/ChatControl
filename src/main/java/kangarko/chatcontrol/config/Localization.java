@@ -13,7 +13,6 @@ import kangarko.chatcontrol.ChatControl;
 @SuppressWarnings("unused")
 public class Localization extends ConfHelper {
 
-	@SuppressWarnings("deprecation")
 	protected static void load() throws Exception {
 		// try if the user has his modified version of localization inside the plugin folder
 		file = new File(ChatControl.instance().getDataFolder(), "localization/" + Settings.LOCALIZATION);
@@ -25,14 +24,7 @@ public class Localization extends ConfHelper {
 			
 			InputStream is = ChatControl.class.getResourceAsStream("/localization/" + Settings.LOCALIZATION);
 			Objects.requireNonNull(is, "Unknown locale: " + Settings.LOCALIZATION_SUFFIX + " (Possible causes: plugin does not have it or was reloaded)");
-			
-			try {
-				cfg = YamlConfiguration.loadConfiguration(new InputStreamReader(is, StandardCharsets.UTF_8));
-			} catch (NoSuchMethodError ex) {
-				cfg = YamlConfiguration.loadConfiguration(is);
-			} catch (NullPointerException ex) {
-				throw new IllegalLocaleException();
-			}
+			cfg = YamlConfiguration.loadConfiguration(is);
 		}
 		loadValues(Localization.class);
 	}
