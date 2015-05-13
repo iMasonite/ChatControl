@@ -426,7 +426,7 @@ public final class ChatCeaser {
 				}
 			}
 		} else
-			Common.Debug("Skipping unknown object: " + input.getClass().getTypeName());
+			Common.Debug("Skipping unknown object: " + input.getClass().getSimpleName());
 
 		return false;
 	}

@@ -28,7 +28,6 @@ public class UpdateCheck implements Runnable {
 		this.fileurl = fileurl;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void run() {
 		String oldversion = ChatControl.instance().getDescription().getVersion();

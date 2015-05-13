@@ -44,7 +44,6 @@ public class VaultHook {
 		return chat.getPlayerSuffix(pl);
 	}
 
-	@SuppressWarnings("deprecation")
 	public void takeMoney(String player, double amount) {
 		if (economy != null)
 			economy.withdrawPlayer(player, amount);

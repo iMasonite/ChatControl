@@ -20,7 +20,7 @@ public class ChatListener implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	public void onPlayerChat(AsyncPlayerChatEvent e) {
-		if (Bukkit.getOnlinePlayers().size() < Settings.MIN_PLAYERS_TO_ENABLE)
+		if (Bukkit.getOnlinePlayers().length < Settings.MIN_PLAYERS_TO_ENABLE)
 			return;
 
 		Player pl = e.getPlayer();
