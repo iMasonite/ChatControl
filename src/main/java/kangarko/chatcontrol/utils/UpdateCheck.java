@@ -4,19 +4,18 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.YamlConfiguration;
-
 import kangarko.chatcontrol.ChatControl;
 import kangarko.chatcontrol.config.Localization;
 import kangarko.chatcontrol.config.Settings;
+
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 public class UpdateCheck implements Runnable {
 
@@ -42,11 +41,7 @@ public class UpdateCheck implements Runnable {
 		try {
 			YamlConfiguration conf;
 			InputStream is = new URL(fileurl).openConnection().getInputStream();
-			try {
-				conf = YamlConfiguration.loadConfiguration(new InputStreamReader(is));
-			} catch (NoSuchMethodError ex) {
-				conf = YamlConfiguration.loadConfiguration(is);
-			}
+			conf = YamlConfiguration.loadConfiguration(is);
 			newversion = conf.getString("version");
 
 			if (newversion.contains("SNAPSHOT") || newversion.contains("DEV"))
