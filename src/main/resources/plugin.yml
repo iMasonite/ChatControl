@@ -1,4 +1,4 @@
-name: ${artifactId}
+name: ${project.artifactId}
 main: ${mainClass}
 version: ${project.version}
 description: ${project.description}
