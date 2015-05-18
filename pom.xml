@@ -54,6 +54,7 @@
 	<build>
 		<finalName>${project.artifactId}</finalName>
 		<plugins>
+		
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
@@ -74,6 +75,7 @@
 					</execution>
 				</executions>
 			</plugin>
+			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -85,6 +87,7 @@
 					<showDeprecation>true</showDeprecation>
 				</configuration>
 			</plugin>
+			
 			<plugin>
 				<artifactId>maven-jar-plugin</artifactId>
 				<configuration>
@@ -93,50 +96,33 @@
 					</archive>
 				</configuration>
 			</plugin>
+			
+			<!-- Deploy packaged JAR files to local debug environments -->
 			<plugin>
-				<groupId>com.github.goldin</groupId>
-				<artifactId>copy-maven-plugin</artifactId>
-				<version>0.2.5</version>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.3</version>
+				<configuration>
+					<tasks>
+						<copy file="./target/${project.artifactId}.jar" tofile="../../DEBUGSERVER/TekkitLite/plugins/${project.artifactId}.jar" />
+						<copy file="./target/${project.artifactId}.jar" tofile="../../DEBUGSERVER/Vanilla147/plugins/${project.artifactId}.jar" />
+						<copy file="./target/${project.artifactId}.jar" tofile="K:/GAME/SERVERS/Plugins-Master/${project.artifactId}.jar" />
+					</tasks>
+				</configuration>
 				<executions>
 					<execution>
-						<id>deploy-to-local-directory</id>
+						<id>Copy JAR files</id>
 						<phase>package</phase>
 						<goals>
-							<goal>copy</goal>
+							<goal>run</goal>
 						</goals>
 						<configuration>
-							<skipIdentical>false</skipIdentical>
-							<failIfNotFound>false</failIfNotFound>
-							<resources>
-								<resource>
-									<description>Copy artifact to another directory</description>
-									<targetPath>/KenetiServerProject/DEBUGSERVER/TekkitLite/plugins</targetPath>
-									<directory>${project.build.directory}</directory>
-									<includes>
-										<include>${project.artifactId}.jar</include>
-									</includes>
-								</resource>
-								<resource>
-									<description>Copy artifact to another directory</description>
-									<targetPath>/KenetiServerProject/DEBUGSERVER/Vanilla147/plugins</targetPath>
-									<directory>${project.build.directory}</directory>
-									<includes>
-										<include>${project.artifactId}.jar</include>
-									</includes>
-								</resource>
-								<resource>
-									<description>Copy artifact to another directory</description>
-									<targetPath>K:/GAME/SERVERS/Plugins-Master</targetPath>
-									<directory>${project.build.directory}</directory>
-									<includes>
-										<include>${project.artifactId}.jar</include>
-									</includes>
-								</resource>
-							</resources>
+							<target failonerror="false"></target>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
+			
 		</plugins>
 		<resources>
 			<resource>
